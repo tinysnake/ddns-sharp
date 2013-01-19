@@ -1,0 +1,9 @@
+# git ignore file
+bin/
+obj/
+Properties/
+packages/
+packages.config
+*.suo
+*.user
+Console
