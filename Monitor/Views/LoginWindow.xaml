@@ -1,0 +1,33 @@
+﻿<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:cmd="http://www.galasoft.ch/mvvmlight"
+    xmlns:vm="clr-namespace:GalaSoft.MvvmLight;assembly=GalaSoft.MvvmLight.WPF45"
+	xmlns:Converters="clr-namespace:DDnsPod.Monitor.Converters"
+	x:Class="DDnsPod.Monitor.Views.LoginWindow"
+    Title="DDnsPod" Width="300" ResizeMode="NoResize" SizeToContent="Height" WindowStartupLocation="CenterScreen" Icon="/DDnsPod.Monitor;component/Resources/logo.png">
+    <Window.Resources>
+        <Converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Window.Resources>
+    <Window.DataContext>
+        <Binding Path="LoginWindowViewModel" Source="{StaticResource Locator}"/>
+    </Window.DataContext>
+    <StackPanel Margin="2">
+        <Label Content="用户登陆" HorizontalAlignment="Center" FontSize="18" Margin="4"/>
+        <Label Content="E-mail" Margin="5,0"/>
+        <TextBox TextWrapping="Wrap" Margin="10,5" Text="{Binding LoginEmail, Mode=TwoWay}"/>
+        <Label Content="密码" Margin="5,0"/>
+        <PasswordBox x:Name="pwdbox_pwd" Margin="10,5" PasswordChanged="PasswordBox_PasswordChanged_1"/>
+        <Label Content="{Binding ErrorMessage}" HorizontalAlignment="Center" Foreground="Red" Visibility="{Binding ShowErrorMessage, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        <Button Content=" 登陆 " Margin="4" Width="60" Height="20" HorizontalAlignment="Center" Command="{Binding LoginCommand}"/>
+        <TextBlock x:Name="lb_register" TextWrapping="Wrap" Text="新用户注册" TextDecorations="Underline" Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" HorizontalAlignment="Right" Margin="10,0" Cursor="Hand">
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="MouseLeftButtonUp">
+					<cmd:EventToCommand Command="{Binding SignUpCommand}"/>
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+        </TextBlock>
+
+    </StackPanel>
+</Window>

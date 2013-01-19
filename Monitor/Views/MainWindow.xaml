@@ -1,0 +1,11 @@
+﻿<Window x:Class="DDnsPod.Monitor.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        Height="60" Width="250" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None">
+    <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1">
+        <StackPanel VerticalAlignment="Center" Margin="5,0">
+            <Label HorizontalAlignment="Center" Content="正在登陆" VerticalAlignment="Top"/>
+            <ProgressBar HorizontalAlignment="Stretch" Height="15"  VerticalAlignment="Top" IsIndeterminate="True"/>
+        </StackPanel>
+    </Border>
+</Window>

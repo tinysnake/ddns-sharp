@@ -1,0 +1,14 @@
+﻿<UserControl x:Class="DDnsPod.Monitor.Components.ServiceStatusControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="16" d:DesignWidth="16">
+    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+        <Image x:Name="img_running" Height="16" Source="/DDnsPod.Monitor;component/Resources/green_light.png" Width="16" ToolTip="Ddns服务正在运行"/>
+        <Image x:Name="img_stopped" Height="16" Source="/DDnsPod.Monitor;component/Resources/red_light.png" Width="16" ToolTip="Ddns服务已停止"/>
+        <Image x:Name="img_unknown" Height="16" Width="16" Source="/DDnsPod.Monitor;component/Resources/warning.png" ToolTip="Ddns服务状态未知"/>
+        <Image x:Name="img_notexist" Height="16" Width="16" Source="/DDnsPod.Monitor;component/Resources/stop.png" ToolTip="Ddns服务尚未安装"/>
+    </StackPanel>
+</UserControl>
