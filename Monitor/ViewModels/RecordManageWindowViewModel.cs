@@ -1,9 +1,13 @@
-﻿using DDnsPod.Core.Models;
+﻿using DDnsPod.Core;
+using DDnsPod.Core.Models;
 using DDnsPod.Core.Services;
 using DDnsPod.Monitor.Core;
 using DDnsPod.Monitor.Design;
+using DDnsPod.Monitor.Models;
+using DDnsPod.Monitor.Views;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Monitor;
 using Ninject;
 using System;
 using System.Collections.Generic;
@@ -21,15 +25,15 @@ namespace DDnsPod.Monitor.ViewModels
         {
             if (this.IsInDesignMode)
             {
-                record = new DesigntimeUpdateModel();
+                record = new UpdateModelWrapper(new DesigntimeUpdateModel());
             }
             else
             {
                 DomainsCache = MonitorIoc.Current.Get<DomainsCache>();
                 TempStorage = MonitorIoc.Current.Get<TempStorage>();
-                record = TempStorage.GetAndRemove<UpdateModel>(DDNSMonitorWindowViewModel.RECORD_FETCH_KEY);
+                record = TempStorage.GetAndRemove<UpdateModelWrapper>(DDNSMonitorWindowViewModel.RECORD_FETCH_KEY);
                 if (record == null)
-                    record = new UpdateModel();
+                    record = new UpdateModelWrapper();
                 if (DomainsCache.DomainInfos.Count() <= 0)
                     RefreshDataCommand.Execute(null);
                 else
@@ -37,9 +41,9 @@ namespace DDnsPod.Monitor.ViewModels
             }
         }
 
-        private DomainsCache DomainsCache { get; set; }
         private TempStorage TempStorage { get; set; }
-        private UpdateModel record;
+        private DomainsCache DomainsCache { get; set; }
+        private UpdateModelWrapper record;
 
         #region INPC
         /// <summary>
@@ -190,6 +194,68 @@ namespace DDnsPod.Monitor.ViewModels
                 RaisePropertyChanged(SubDomainListPropertyName);
             }
         }
+
+        /// <summary>
+        /// The <see cref="IsDomainListAvailable" /> property's name.
+        /// </summary>
+        public const string IsDomainListAvailablePropertyName = "IsDomainListAvailable";
+
+        private bool _isDomainListAvailable = false;
+
+        /// <summary>
+        /// Sets and gets the IsDomainListAvailable property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsDomainListAvailable
+        {
+            get
+            {
+                return _isDomainListAvailable;
+            }
+
+            set
+            {
+                if (_isDomainListAvailable == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(IsDomainListAvailablePropertyName);
+                _isDomainListAvailable = value;
+                RaisePropertyChanged(IsDomainListAvailablePropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="IsSubDomainListAvailable" /> property's name.
+        /// </summary>
+        public const string IsSubDomainListAvailablePropertyName = "IsSubDomainListAvailable";
+
+        private bool _isSubDomainListAvailable = false;
+
+        /// <summary>
+        /// Sets and gets the IsSubDomainListAvailable property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsSubDomainListAvailable
+        {
+            get
+            {
+                return _isSubDomainListAvailable;
+            }
+
+            set
+            {
+                if (_isSubDomainListAvailable == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(IsSubDomainListAvailablePropertyName);
+                _isSubDomainListAvailable = value;
+                RaisePropertyChanged(IsSubDomainListAvailablePropertyName);
+            }
+        }
         #endregion
 
         #region RefreshDataCommand
@@ -240,8 +306,25 @@ namespace DDnsPod.Monitor.ViewModels
         }
         #endregion
 
+        #region OkCommand
+        private RelayCommand _okCommand;
+
+        /// <summary>
+        /// Gets the CreateUpdateModelCommand.
+        /// </summary>
+        public RelayCommand OkCommand
+        {
+            get
+            {
+                return _okCommand
+                    ?? (_okCommand = new RelayCommand(OnOkay));
+            }
+        }
+        #endregion
+
         private async void RefreshList()
         {
+            IsDomainListAvailable = false;
             var domainList = await DomainService.GetList();
             if (domainList.Status.Code == 1)
             {
@@ -258,7 +341,7 @@ namespace DDnsPod.Monitor.ViewModels
 
         private async void OnDomainSelected(string domainName)
         {
-            DomainName = domainName;
+            //DomainName = domainName;
             var recordInfo = DomainsCache.DomainInfos.FirstOrDefault(d => d.Name == domainName);
             if (recordInfo == null)
                 return;
@@ -267,9 +350,12 @@ namespace DDnsPod.Monitor.ViewModels
                 SubDomainList = new ObservableCollection<string>(
                     from r in DomainsCache.DomainRecordSet[recordInfo]
                     select r.Name);
+
+                IsSubDomainListAvailable = true;
             }
             else
             {
+                IsSubDomainListAvailable = false;
                 var recordList = await RecordService.GetList(recordInfo.ID);
                 if (recordList.Status.Code == 1)
                 {
@@ -278,6 +364,7 @@ namespace DDnsPod.Monitor.ViewModels
                     SubDomainList = new ObservableCollection<string>(
                         from r in DomainsCache.DomainRecordSet[recordInfo]
                         select r.Name);
+                    IsSubDomainListAvailable = true;
                 }
             }
         }
@@ -292,6 +379,34 @@ namespace DDnsPod.Monitor.ViewModels
             DomainList = new ObservableCollection<string>(
                 from d in DomainsCache.DomainInfos
                 select d.Name);
+            IsDomainListAvailable = true;
+            if (!String.IsNullOrEmpty(DomainName))
+                OnDomainSelected(DomainName);
+        }
+
+        private void OnOkay()
+        {
+            if (String.IsNullOrWhiteSpace(SubDomain))
+            {
+                MessageBox.Show("请输入记录类型.");
+            }
+            else if (DomainsCache.DomainInfos.Count(i => i.Name == DomainName) > 0)
+            {
+                MessengerInstance.Send(record);
+
+                foreach (Window win in App.Current.Windows)
+                {
+                    if (win is RecordManageWindow)
+                    {
+                        win.Close();
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("请选择域名.");
+            }
         }
     }
 }

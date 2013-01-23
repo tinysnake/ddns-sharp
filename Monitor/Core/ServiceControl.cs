@@ -11,7 +11,7 @@ namespace DDnsPod.Monitor.Core
     public enum ServiceStatus
     {
         Running,
-        Stoped,
+        Stopped,
         NotExist,
         UnKnown
     }
@@ -36,7 +36,7 @@ namespace DDnsPod.Monitor.Core
                         status = ServiceStatus.Running;
                         break;
                     case ServiceControllerStatus.Stopped:
-                        status = ServiceStatus.Stoped;
+                        status = ServiceStatus.Stopped;
                         break;
                     default:
                         break;

@@ -30,6 +30,11 @@ namespace DDnsPod.Monitor
     {
         static ViewModelLocator()
         {
+            
+        }
+
+        public static void Setup()
+        {
             if (ViewModelBase.IsInDesignModeStatic)
             {
                 MonitorIoc.Current.Load<DesigntimeNinjectModule>();

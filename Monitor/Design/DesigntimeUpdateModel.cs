@@ -11,8 +11,11 @@ namespace DDnsPod.Monitor.Design
     {
         public DesigntimeUpdateModel()
         {
-            this.DomainName = "google.com";
-            this.SubDomain = "disk";
+            var random = new Random();
+            this.DomainName = new[] { "google.com", "tiny-snake.com", "github.com", "amazon.com" }[random.Next(0,3)];
+            this.SubDomain = new[] { "www","test","@","pay","drive"}[random.Next(0,4)];
+            this.LastUpdateIP = "255.255.255.255";
+            this.Enabled = random.NextDouble() > .5f ? true : false;
             this.LineName = "默认";
         }
     }

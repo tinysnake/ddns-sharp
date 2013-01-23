@@ -1,0 +1,62 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:cmd="http://www.galasoft.ch/mvvmlight"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:DDnsPod.Monitor.Components"
+    xmlns:Converters="clr-namespace:DDnsPod.Monitor.Converters" 
+    x:Class="DDnsPod.Monitor.Components.UpdateModelControl"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <Converters:ReverseBooleanConverter x:Key="ReverseBooleanConverter"/>
+    </UserControl.Resources>
+    <StackPanel Orientation="Horizontal">
+        <Border Width="91" VerticalAlignment="Center" Margin="0,0,2,0">
+            <Label HorizontalAlignment="Center" Content="{Binding Model.SubDomain, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UpdateModelControl}}}" />
+        </Border>
+        <Border Width="154" VerticalAlignment="Center" Margin="2,0">
+            <Label Content="{Binding Model.DomainName, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UpdateModelControl}}}" HorizontalAlignment="Center" />
+        </Border>
+        <Border Width="138" VerticalAlignment="Center" Margin="2,0">
+            <Label Content="{Binding Model.LastUpdateIP, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UpdateModelControl}}}" HorizontalAlignment="Center" />
+        </Border>
+        <Border Width="76" VerticalAlignment="Center" Margin="2,0,0,0">
+            <Label Content="{Binding Model.LineName, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UpdateModelControl}}}" HorizontalAlignment="Center" />
+        </Border>
+        <Border Width="136" VerticalAlignment="Center" Margin="2,0,0,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock x:Name="tb_enable" Text="启用" Margin="5,0" Cursor="Hand" Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" TextDecorations="Underline" Visibility="{Binding Model.Enabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UpdateModelControl}}, ConverterParameter=Visibility, Converter={StaticResource ReverseBooleanConverter}}">
+        			<i:Interaction.Triggers>
+        				<i:EventTrigger EventName="MouseLeftButtonDown">
+        					<cmd:EventToCommand CommandParameter="{Binding Model, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UpdateModelControl}}}" Command="{Binding EnableCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UpdateModelControl}}}"/>
+        				</i:EventTrigger>
+        			</i:Interaction.Triggers>
+                </TextBlock>
+                <TextBlock x:Name="tb_disable" Text="禁用" Margin="5,0" Cursor="Hand" Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" TextDecorations="Underline" Visibility="{Binding Model.Enabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UpdateModelControl}}, Converter={StaticResource BoolToVisibilityConverter}}">
+        			<i:Interaction.Triggers>
+        				<i:EventTrigger EventName="MouseLeftButtonDown">
+        					<cmd:EventToCommand CommandParameter="{Binding Model, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UpdateModelControl}}}" Command="{Binding DisableCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UpdateModelControl}}}"/>
+        				</i:EventTrigger>
+        			</i:Interaction.Triggers>
+                </TextBlock>
+                <TextBlock Text="编辑" Margin="5,0" Cursor="Hand" Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" TextDecorations="Underline">
+        			<i:Interaction.Triggers>
+        				<i:EventTrigger EventName="MouseLeftButtonDown">
+        					<cmd:EventToCommand CommandParameter="{Binding Model, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UpdateModelControl}}}" Command="{Binding EditCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UpdateModelControl}}}"/>
+        				</i:EventTrigger>
+        			</i:Interaction.Triggers>
+                </TextBlock>
+                <TextBlock Text="删除" Margin="5,0" Cursor="Hand" Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" TextDecorations="Underline">
+        			<i:Interaction.Triggers>
+        				<i:EventTrigger EventName="MouseLeftButtonDown">
+        					<cmd:EventToCommand CommandParameter="{Binding Model, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UpdateModelControl}}}" Command="{Binding DeleteCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UpdateModelControl}}}"/>
+        				</i:EventTrigger>
+        			</i:Interaction.Triggers>
+                </TextBlock>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

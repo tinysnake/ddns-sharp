@@ -15,6 +15,8 @@ using System.ServiceProcess;
 using DDnsPod.Core;
 using Monitor;
 using System.Windows;
+using System.Collections.ObjectModel;
+using DDnsPod.Monitor.Models;
 
 namespace DDnsPod.Monitor.ViewModels
 {
@@ -24,19 +26,14 @@ namespace DDnsPod.Monitor.ViewModels
 
         public DDNSMonitorWindowViewModel()
         {
-            if (IsInDesignMode)
-            {
-                AppConfig = new DesigntimeAppConfig();
-            }
-            else
-            {
-                Initialize();
-            }
+            Initialize();
+            MessengerInstance.Register<UpdateModelWrapper>(this, OnRecordManaged);
         }
 
         private void Initialize()
         {
-            AppConfig = DDNSPodRuntime.AppConfig;
+            Runtime = MonitorIoc.Current.Get<MonitorRuntime>();
+            Runtime.SetUpdateList(DDNSPodRuntime.AppConfig.UpdateList);
             service = ServiceControl.GetService();
             ServiceStatus = ServiceControl.GetServiceStatus(service);
             UpdateCurrentIP();
@@ -49,12 +46,10 @@ namespace DDnsPod.Monitor.ViewModels
 
         private ServiceController service;
 
-        [Inject]
-        public UserInfo UserInfo { get; set; }
+        public MonitorRuntime Runtime { get; private set; }
+
         [Inject]
         public TempStorage TempStorage { get; set; }
-
-        public AppConfig AppConfig { get; private set; }
 
         #region INPC
         /// <summary>
@@ -147,77 +142,87 @@ namespace DDnsPod.Monitor.ViewModels
         #endregion
 
         #region EnableRecordCommand
-        private RelayCommand<UpdateModel> _enableRecordCommand;
+        private RelayCommand<UpdateModelWrapper> _enableRecordCommand;
 
         /// <summary>
         /// Gets the EnableRecordCommand.
         /// </summary>
-        public RelayCommand<UpdateModel> EnableRecordCommand
+        public RelayCommand<UpdateModelWrapper> EnableRecordCommand
         {
             get
             {
                 return _enableRecordCommand
-                    ?? (_enableRecordCommand = new RelayCommand<UpdateModel>(
+                    ?? (_enableRecordCommand = new RelayCommand<UpdateModelWrapper>(
                 (um) =>
                 {
                     um.Enabled = true;
+
+                    DDNSPodRuntime.AppConfig.UpdateList = (from w in Runtime.UpdateList
+                                                           select w.UnWrap()).ToList();
+                    DDNSPodRuntime.SaveAppConfig();
                 }));
             }
         }
         #endregion
 
         #region DisableRecordCommand
-        private RelayCommand<UpdateModel> _disableRecordCommand;
+        private RelayCommand<UpdateModelWrapper> _disableRecordCommand;
 
         /// <summary>
         /// Gets the EnableRecordCommand.
         /// </summary>
-        public RelayCommand<UpdateModel> DisableRecordCommand
+        public RelayCommand<UpdateModelWrapper> DisableRecordCommand
         {
             get
             {
                 return _disableRecordCommand
-                    ?? (_disableRecordCommand = new RelayCommand<UpdateModel>(
+                    ?? (_disableRecordCommand = new RelayCommand<UpdateModelWrapper>(
                 (um) =>
                 {
                     um.Enabled = false;
+
+                    DDNSPodRuntime.AppConfig.UpdateList = (from w in Runtime.UpdateList
+                                                           select w.UnWrap()).ToList();
+                    DDNSPodRuntime.SaveAppConfig();
                 }));
             }
         }
         #endregion
 
         #region EditRecordCommand
-        private RelayCommand<UpdateModel> _editRecordCommand;
+        private RelayCommand<UpdateModelWrapper> _editRecordCommand;
 
         /// <summary>
         /// Gets the EditRecordCommand.
         /// </summary>
-        public RelayCommand<UpdateModel> EditRecordCommand
+        public RelayCommand<UpdateModelWrapper> EditRecordCommand
         {
             get
             {
                 return _editRecordCommand
-                    ?? (_editRecordCommand = new RelayCommand<UpdateModel>(
+                    ?? (_editRecordCommand = new RelayCommand<UpdateModelWrapper>(
                 (um) =>
                 {
-                    
+                    TempStorage.Set(RECORD_FETCH_KEY, um);
+                    var win = new RecordManageWindow();
+                    win.ShowDialog();
                 }));
             }
         }
         #endregion
 
         #region DeleteRecordCommand
-        private RelayCommand<UpdateModel> _deleteRecordCommand;
+        private RelayCommand<UpdateModelWrapper> _deleteRecordCommand;
 
         /// <summary>
         /// Gets the DeleteRecordCommand.
         /// </summary>
-        public RelayCommand<UpdateModel> DeleteRecordCommand
+        public RelayCommand<UpdateModelWrapper> DeleteRecordCommand
         {
             get
             {
                 return _deleteRecordCommand
-                    ?? (_deleteRecordCommand = new RelayCommand<UpdateModel>(
+                    ?? (_deleteRecordCommand = new RelayCommand<UpdateModelWrapper>(
                 (um) =>
                 {
                     um.Enabled = true;
@@ -239,12 +244,36 @@ namespace DDnsPod.Monitor.ViewModels
                 return _addRecordCommand
                     ?? (_addRecordCommand = new RelayCommand(() =>
                 {
-                    TempStorage.Set(RECORD_FETCH_KEY, new UpdateModel());
                     var win = new RecordManageWindow();
                     win.ShowDialog();
                 }));
             }
         }
         #endregion
+
+        private void OnRecordManaged(UpdateModelWrapper obj)
+        {
+            if (Runtime.UpdateList.Count(m => m == obj) <= 0)
+            {
+                Runtime.UpdateList.Add(obj);
+            }
+
+            DDNSPodRuntime.AppConfig.UpdateList = (from w in Runtime.UpdateList
+                                                   select w.UnWrap()).ToList();
+            DDNSPodRuntime.SaveAppConfig();
+        }
+
+        private void DeleteRecrod(UpdateModelWrapper um)
+        {
+            var mbr = MessageBox.Show("请确认操作.","注意", MessageBoxButton.YesNo);
+            if (mbr == MessageBoxResult.Yes)
+            {
+                Runtime.UpdateList.Remove(um);
+
+                DDNSPodRuntime.AppConfig.UpdateList = (from w in Runtime.UpdateList
+                                                       select w.UnWrap()).ToList();
+                DDNSPodRuntime.SaveAppConfig();
+            }
+        }
     }
 }

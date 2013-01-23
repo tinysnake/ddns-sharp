@@ -6,14 +6,6 @@
         xmlns:local="clr-namespace:DDnsPod.Monitor.Core"
         xmlns:Components="clr-namespace:DDnsPod.Monitor.Components" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" mc:Ignorable="d" x:Class="DDnsPod.Monitor.Views.DDNSMonitorWindow"
         Title="DDNSMonitor" Height="480" Width="640" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Icon="/DDnsPod.Monitor;component/Resources/logo.png">
-	<Window.Resources>
-		<Style x:Key="LinkButtonStyle" TargetType="{x:Type TextBlock}">
-			<Setter Property="TextWrapping" Value="NoWrap"/>
-			<Setter Property="TextTrimming" Value="None"/>
-			<Setter Property="TextDecorations" Value="Underline"/>
-			<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}"/>
-		</Style>
-	</Window.Resources>
 
 	<Window.DataContext>
 		<Binding Path="DDNSMonitorWindowViewModel" Source="{StaticResource Locator}"/>
@@ -34,7 +26,7 @@
                 </Grid.ColumnDefinitions>
                 <Image Grid.Column="0" Source="/DDnsPod.Monitor;component/Resources/big logo.png" Height="45" />
                 <StackPanel Grid.Column="1" Margin="0,2" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Label Content="{Binding UserInfo.Model.Name}" VerticalAlignment="Center" Margin="10,0"/>
+                    <Label Content="{Binding Runtime.UserInfo.Model.Name}" VerticalAlignment="Center" Margin="10,0"/>
                     <Label Content="当前IP:" VerticalAlignment="Center" Margin="0,0,-2,0"/>
                     <Label Content="{Binding CurrentIP}" VerticalAlignment="Center" Margin="-5,0,0,0"/>
                     <Label Content="服务状态:" VerticalAlignment="Center"/>
@@ -66,85 +58,13 @@
         		<Label Content="操作" HorizontalAlignment="Center" />
         	</Border>
         </StackPanel>
-        <ListBox Grid.Row="2" ItemsSource="{Binding AppConfig.UpdateList}">
+        <ListBox Grid.Row="2" ItemsSource="{Binding Runtime.UpdateList}">
         	<ListBox.Resources>
         		<local:DataContextSpy x:Key="spy" />
         	</ListBox.Resources>
         	<ListBox.ItemTemplate>
         		<DataTemplate>
-        			<StackPanel Orientation="Horizontal">
-        				<VisualStateManager.VisualStateGroups>
-        					<VisualStateGroup x:Name="IsEnabledStates">
-        						<VisualState x:Name="EnabledState">
-        							<Storyboard>
-        								<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="tb_enable">
-        									<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
-        								</ObjectAnimationUsingKeyFrames>
-        								<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="tb_disable">
-        									<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
-        								</ObjectAnimationUsingKeyFrames>
-        							</Storyboard>
-        						</VisualState>
-        						<VisualState x:Name="DisabledState">
-        							<Storyboard>
-        								<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="tb_enable">
-        									<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
-        								</ObjectAnimationUsingKeyFrames>
-        								<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="tb_disable">
-        									<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
-        								</ObjectAnimationUsingKeyFrames>
-        							</Storyboard>
-        						</VisualState>
-        					</VisualStateGroup>
-        				</VisualStateManager.VisualStateGroups>
-        				<i:Interaction.Behaviors>
-        					<ei:DataStateBehavior Binding="{Binding Enabled}" Value="True" TrueState="EnabledState" FalseState="DisabledState"/>
-        				</i:Interaction.Behaviors>
-        				<Border Width="91" VerticalAlignment="Center" Margin="0,0,2,0">
-        					<Label Content="{Binding SubDomain}" HorizontalAlignment="Center" />
-        				</Border>
-        				<Border Width="154" VerticalAlignment="Center" Margin="2,0">
-        					<Label Content="{Binding DomainName}" HorizontalAlignment="Center" />
-        				</Border>
-        				<Border Width="138" VerticalAlignment="Center" Margin="2,0">
-        					<Label Content="{Binding LastUpdateIP}" HorizontalAlignment="Center" />
-        				</Border>
-        				<Border Width="76" VerticalAlignment="Center" Margin="2,0,0,0">
-        					<Label Content="{Binding LineName}" HorizontalAlignment="Center" />
-        				</Border>
-        				<Border Width="136" VerticalAlignment="Center" Margin="2,0,0,0">
-        					<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-        						<TextBlock x:Name="tb_enable" Text="启用" Margin="5,0" Style="{DynamicResource LinkButtonStyle}">
-        							<i:Interaction.Triggers>
-        								<i:EventTrigger EventName="MouseLeftButtonDown">
-        									<cmd:EventToCommand CommandParameter="{Binding}" Command="{Binding DataContext.EnableRecordCommand, Source={StaticResource spy}}"/>
-        								</i:EventTrigger>
-        							</i:Interaction.Triggers>
-        						</TextBlock>
-        						<TextBlock x:Name="tb_disable" Text="禁用" Margin="5,0" Style="{DynamicResource LinkButtonStyle}">
-        							<i:Interaction.Triggers>
-        								<i:EventTrigger EventName="MouseLeftButtonDown">
-        									<cmd:EventToCommand CommandParameter="{Binding}" Command="{Binding DataContext.DisableRecordCommand, Mode=OneWay, Source={StaticResource spy}}"/>
-        								</i:EventTrigger>
-        							</i:Interaction.Triggers>
-        						</TextBlock>
-        						<TextBlock Text="编辑" Margin="5,0" Style="{DynamicResource LinkButtonStyle}">
-        							<i:Interaction.Triggers>
-        								<i:EventTrigger EventName="MouseLeftButtonDown">
-        									<cmd:EventToCommand CommandParameter="{Binding}" Command="{Binding DataContext.EditRecordCommand, Mode=OneWay, Source={StaticResource spy}}"/>
-        								</i:EventTrigger>
-        							</i:Interaction.Triggers>
-        						</TextBlock>
-        						<TextBlock Text="删除" Margin="5,0" Style="{DynamicResource LinkButtonStyle}">
-        							<i:Interaction.Triggers>
-        								<i:EventTrigger EventName="MouseLeftButtonDown">
-        									<cmd:EventToCommand CommandParameter="{Binding}" Command="{Binding DataContext.DeleteRecordCommand, Mode=OneWay, Source={StaticResource spy}}"/>
-        								</i:EventTrigger>
-        							</i:Interaction.Triggers>
-        						</TextBlock>
-        					</StackPanel>
-        				</Border>
-        			</StackPanel>
+        			<Components:UpdateModelControl Model="{Binding Mode=OneWay}" DeleteCommand="{Binding DataContext.DeleteRecordCommand, Mode=OneWay, Source={StaticResource spy}}" DisableCommand="{Binding DataContext.DisableRecordCommand, Mode=OneWay, Source={StaticResource spy}}" EditCommand="{Binding DataContext.EditRecordCommand, Mode=OneWay, Source={StaticResource spy}}" EnableCommand="{Binding DataContext.EnableRecordCommand, Mode=OneWay, Source={StaticResource spy}}"/>
         		</DataTemplate>
         	</ListBox.ItemTemplate>
         </ListBox>

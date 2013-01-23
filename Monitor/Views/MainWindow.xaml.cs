@@ -16,6 +16,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using DDnsPod.Monitor.Models;
+using Ninject;
 
 namespace DDnsPod.Monitor.Views
 {
@@ -26,6 +28,7 @@ namespace DDnsPod.Monitor.Views
     {
         public MainWindow()
         {
+            ViewModelLocator.Setup();
             DDNSPodRuntime.LoadAppConfig();
             var config = DDNSPodRuntime.AppConfig;
             if (String.IsNullOrWhiteSpace(config.Email) ||
@@ -45,7 +48,8 @@ namespace DDnsPod.Monitor.Views
             var userInfo = await CommonService.GetUserInfo();
             if (userInfo.Status.Code == 1)
             {
-                MonitorIoc.Current.Bind<UserInfo>().ToConstant<UserInfo>(userInfo.Info);
+                var runtime = MonitorIoc.Current.Get<MonitorRuntime>();
+                runtime.UserInfo = userInfo.Info;
                 var win = new DDNSMonitorWindow();
                 win.Show();
                 this.Close();

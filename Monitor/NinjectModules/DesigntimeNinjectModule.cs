@@ -7,6 +7,7 @@ using Ninject.Modules;
 using DDnsPod.Monitor.ViewModels;
 using DDnsPod.Core.Models;
 using DDnsPod.Monitor.Design;
+using DDnsPod.Monitor.Models;
 
 namespace DDnsPod.Monitor.NinjectModules
 {
@@ -17,7 +18,7 @@ namespace DDnsPod.Monitor.NinjectModules
             Bind<LoginWindowViewModel>().ToSelf();
             Bind<DDNSMonitorWindowViewModel>().ToSelf();
             Bind<RecordManageWindowViewModel>().ToSelf();
-            Bind<UserInfo>().To<DesigntimeUserInfo>();
+            Bind<MonitorRuntime>().To<DesigntimeMonitorRuntime>().InSingletonScope();
         }
     }
 }

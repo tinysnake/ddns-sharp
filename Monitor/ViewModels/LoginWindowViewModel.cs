@@ -10,6 +10,8 @@ using System;
 using System.Timers;
 using System.Windows;
 using Monitor;
+using DDnsPod.Monitor.Models;
+using Ninject;
 
 namespace DDnsPod.Monitor.ViewModels
 {
@@ -26,6 +28,7 @@ namespace DDnsPod.Monitor.ViewModels
         /// </summary>
         public LoginWindowViewModel()
         {
+            _runtime = MonitorIoc.Current.Get<MonitorRuntime>();
             _loginFailedCount = 0;
             _ableToLogin = true;
         }
@@ -33,6 +36,7 @@ namespace DDnsPod.Monitor.ViewModels
         private int _loginFailedCount;
         private bool _ableToLogin;
         private Timer _loginTimer;
+        private MonitorRuntime _runtime;
 
         #region INPC
         /// <summary>
@@ -178,7 +182,7 @@ namespace DDnsPod.Monitor.ViewModels
             var userInfo = await CommonService.GetUserInfo();
             if (userInfo.Status.Code == 1)
             {
-                MonitorIoc.Current.Bind<UserInfo>().ToConstant<UserInfo>(userInfo.Info);
+                _runtime.UserInfo = userInfo.Info;
                 DDNSPodRuntime.SaveAppConfig();
 
                 var mwin = new DDNSMonitorWindow();

@@ -32,6 +32,7 @@ namespace DDnsPod.Monitor.Components
             get { return (ServiceStatus)GetValue(StatusProperty); }
             set { 
                 SetValue(StatusProperty, value);
+                /*
                 var status = Status;
                 switch (status)
                 {
@@ -41,7 +42,7 @@ namespace DDnsPod.Monitor.Components
                         img_unknown.Visibility = Visibility.Collapsed;
                         img_notexist.Visibility = Visibility.Collapsed;
                         break;
-                    case ServiceStatus.Stoped:
+                    case ServiceStatus.Stopped:
                         img_running.Visibility = Visibility.Collapsed;
                         img_stopped.Visibility = Visibility.Visible;
                         img_unknown.Visibility = Visibility.Collapsed;
@@ -62,12 +63,39 @@ namespace DDnsPod.Monitor.Components
                     default:
                         break;
                 }
+                 */
             }
         }
-        
-        public static readonly DependencyProperty StatusProperty =
-            DependencyProperty.Register("Status", typeof(ServiceStatus), typeof(ServiceStatusControl), new PropertyMetadata(ServiceStatus.UnKnown));
 
+        public static readonly DependencyProperty StatusProperty =
+            DependencyProperty.Register("Status", typeof(ServiceStatus),
+            typeof(ServiceStatusControl), new PropertyMetadata(ServiceStatus.UnKnown));
 
     }
+
+    class ServiceStatusVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            switch (parameter as String)
+            {
+                case "Running":
+                    return (ServiceStatus)value == ServiceStatus.Running ? Visibility.Visible : Visibility.Collapsed;
+                case "Stopped":
+                    return (ServiceStatus)value == ServiceStatus.Stopped ? Visibility.Visible : Visibility.Collapsed;
+                case "NotExist":
+                    return (ServiceStatus)value == ServiceStatus.NotExist ? Visibility.Visible : Visibility.Collapsed;
+                case "UnKnow":
+                    return (ServiceStatus)value == ServiceStatus.UnKnown ? Visibility.Visible : Visibility.Collapsed;
+                default:
+                    return Visibility.Collapsed;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 }

@@ -1,4 +1,5 @@
 ﻿using DDnsPod.Monitor.Core;
+using DDnsPod.Monitor.Models;
 using DDnsPod.Monitor.ViewModels;
 using Ninject.Modules;
 using System;
@@ -13,6 +14,7 @@ namespace DDnsPod.Monitor.NinjectModules
     {
         public override void Load()
         {
+            Bind<MonitorRuntime>().ToSelf().InSingletonScope();
             Bind<TempStorage>().ToSelf().InSingletonScope();
             Bind<DomainsCache>().ToSelf().InSingletonScope();
 

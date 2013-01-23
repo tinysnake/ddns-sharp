@@ -1,45 +1,52 @@
-﻿<Window x:Class="DDnsPod.Monitor.Views.RecordManageWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:cmd="http://www.galasoft.ch/mvvmlight"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Title="管理记录 - DDnsPod" Height="219" Width="233" Icon="/DDnsPod.Monitor;component/Resources/logo.png" ResizeMode="NoResize" DataContext="{Binding RecordManageWindowViewModel, Mode=OneWay, Source={StaticResource Locator}}" WindowStartupLocation="CenterScreen" SizeToContent="Height">
+        xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:Converters="clr-namespace:DDnsPod.Monitor.Converters" mc:Ignorable="d" x:Class="DDnsPod.Monitor.Views.RecordManageWindow"
+        Title="管理记录 - DDnsPod" Height="219" Width="233" Icon="/DDnsPod.Monitor;component/Resources/logo.png" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" SizeToContent="Height">
+	<Window.Resources>
+		<Converters:ReverseBooleanConverter x:Key="ReverseBooleanConverter"/>
+	</Window.Resources>
+	<Window.DataContext>
+		<Binding Mode="OneWay" Path="RecordManageWindowViewModel" Source="{StaticResource Locator}"/>
+	</Window.DataContext>
     <StackPanel Margin="5,0">
-        <Label Content="域名"/>
-        <ComboBox x:Name="comboBox" Text="{Binding DomainName, Mode=TwoWay}" IsEditable="True" ItemsSource="{Binding DomainList}">
-        	<i:Interaction.Triggers>
-        		<i:EventTrigger EventName="SelectionChanged">
-        			<cmd:EventToCommand CommandParameter="{Binding SelectedItem, ElementName=comboBox}" Command="{Binding DomainSelectedCommand, Mode=OneWay}"/>
-        		</i:EventTrigger>
-        	</i:Interaction.Triggers>
-        </ComboBox>
-        <Label Content="主机记录"/>
-        <ComboBox x:Name="comboBox1" Text="{Binding SubDomain, Mode=TwoWay}" IsEditable="True" ItemsSource="{Binding SubDomainList}">
-        	<i:Interaction.Triggers>
-        		<i:EventTrigger EventName="SelectionChanged">
-        			<cmd:EventToCommand Command="{Binding SubDomainSelectedCommand, Mode=OneWay}" CommandParameter="{Binding SelectedItem, ElementName=comboBox1}"/>
-        		</i:EventTrigger>
-        	</i:Interaction.Triggers>
-        </ComboBox>
-        <Label Content="线路"/>
-        <ComboBox SelectedValue="{Binding LineName}" SelectedIndex="0">
-            <sys:String>默认</sys:String>
-            <sys:String>电信</sys:String>
-            <sys:String>联通</sys:String>
-            <sys:String>教育网</sys:String>
-            <sys:String>移动</sys:String>
-            <sys:String>铁通</sys:String>
-            <sys:String>国内</sys:String>
-            <sys:String>国外</sys:String>
-        </ComboBox>
-        <Button Content="确定" HorizontalAlignment="Center" Width="60" Margin="0,10,0,5"/>
-        <TextBlock TextWrapping="Wrap" Text="刷新" TextDecorations="Underline" Foreground="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}" Cursor="Hand">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseUp">
-                    <cmd:EventToCommand Command="{Binding RefreshDataCommand, Mode=OneWay}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </TextBlock>
-    </StackPanel>
+		<Label Content="域名"/>
+		<ComboBox x:Name="comboBox" SelectedItem="{Binding DomainName, Mode=TwoWay}" IsEditable="False" ItemsSource="{Binding DomainList}" IsReadOnly="{Binding IsDomainListAvailable, Converter={StaticResource ReverseBooleanConverter}}">
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="SelectionChanged">
+					<cmd:EventToCommand CommandParameter="{Binding SelectedItem, ElementName=comboBox}" Command="{Binding DomainSelectedCommand, Mode=OneWay}"/>
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+		</ComboBox>
+		<Label Content="主机记录"/>
+		<ComboBox x:Name="comboBox1" Text="{Binding SubDomain, Mode=TwoWay}" IsEditable="True" ItemsSource="{Binding SubDomainList}" IsReadOnly="{Binding IsSubDomainListAvailable, Converter={StaticResource ReverseBooleanConverter}}">
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="SelectionChanged">
+					<cmd:EventToCommand CommandParameter="{Binding SelectedItem, ElementName=comboBox1}" Command="{Binding SubDomainSelectedCommand, Mode=OneWay}"/>
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+		</ComboBox>
+		<Label Content="线路"/>
+		<ComboBox SelectedValue="{Binding LineName}" SelectedIndex="0">
+			<sys:String>默认</sys:String>
+			<sys:String>电信</sys:String>
+			<sys:String>联通</sys:String>
+			<sys:String>教育网</sys:String>
+			<sys:String>移动</sys:String>
+			<sys:String>铁通</sys:String>
+			<sys:String>国内</sys:String>
+			<sys:String>国外</sys:String>
+		</ComboBox>
+		<Button Content="确定" HorizontalAlignment="Center" Command="{Binding OkCommand}" Width="60" Margin="0,10,0,5"/>
+		<TextBlock TextWrapping="Wrap" Text="刷新" TextDecorations="Underline" Foreground="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}" Cursor="Hand" Margin="0,-20,0,0" HorizontalAlignment="Left">
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="MouseUp">
+					<cmd:EventToCommand Command="{Binding RefreshDataCommand, Mode=OneWay}" />
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+		</TextBlock>
+	</StackPanel>
 </Window>

@@ -49,6 +49,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MvvmLightLibs.4.1.26.1\lib\net45\GalaSoft.MvvmLight.WPF45.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Expression.Drawing" />
     <Reference Include="Microsoft.Expression.Interactions" />
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=59d6d24383174ac4, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.4.1.26.1\lib\net45\Microsoft.Practices.ServiceLocation.dll</HintPath>
@@ -87,13 +88,20 @@
     <Compile Include="Components\ServiceStatusControl.xaml.cs">
       <DependentUpon>ServiceStatusControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Components\UpdateModelControl.xaml.cs">
+      <DependentUpon>UpdateModelControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\ReverseBooleanConverter.cs" />
     <Compile Include="Core\DataContextSpy.cs" />
     <Compile Include="Core\TempStorage.cs" />
+    <Compile Include="Design\DesigntimeMonitorRuntime.cs" />
     <Compile Include="Design\DesigntimeUpdateModel.cs" />
+    <Compile Include="Design\DesigntimeUpdateModelWrapper.cs" />
     <Compile Include="Models\DomainsCache.cs" />
     <Compile Include="Core\ServiceControl.cs" />
-    <Compile Include="Design\DesigntimeAppConfig.cs" />
     <Compile Include="Design\DesigntimeUserInfo.cs" />
+    <Compile Include="Models\MonitorRuntime.cs" />
+    <Compile Include="Models\UpdateModelWrapper.cs" />
     <Compile Include="ViewModels\DDNSMonitorWindowViewModel.cs" />
     <Compile Include="ViewModels\RecordManageWindowViewModel.cs" />
     <Compile Include="Views\DDNSMonitorWindow.xaml.cs">
@@ -103,6 +111,10 @@
       <DependentUpon>RecordManageWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Components\ServiceStatusControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\UpdateModelControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
