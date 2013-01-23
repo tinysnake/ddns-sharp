@@ -76,14 +76,16 @@
         			<ColumnDefinition Width="*" />
         			<ColumnDefinition Width="*" />
         			<ColumnDefinition Width="*" />
-        			<ColumnDefinition Width="*" />
-        		</Grid.ColumnDefinitions>
-        		<Button Grid.Column="0" Content="启动服务" Margin="5,0"/>
-        		<Button Grid.Column="1" Content="强制同步" Margin="5,0"/>
-        		<Button Grid.Column="2" Content="添加记录" Margin="5,0" Command="{Binding AddRecordCommand, Mode=OneWay}"/>
-        		<Button Grid.Column="3" Content="关于" Margin="5,0"/>
-        		<Button Grid.Column="4" Content="隐藏" Margin="5,0"/>
-        		<Button Grid.Column="5" Content="退出" Margin="5,0"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+        		<Button Grid.Column="0" Content="启动服务" Margin="5,0" Command="{Binding ServiceManagementCommand, Mode=OneWay}"/>
+        		<Button Grid.Column="1" Content="强制同步" Margin="5,0" Command="{Binding ForceUpdateCommand, Mode=OneWay}"/>
+                <Button Grid.Column="2" Content="查看日志" Margin="5,0" Command="{Binding CheckoutLogCommand, Mode=OneWay}"/>
+                <Button Grid.Column="3" Content="添加记录" Margin="5,0" Command="{Binding AddRecordCommand, Mode=OneWay}"/>
+        		<Button Grid.Column="4" Content="关于" Margin="5,0"/>
+        		<Button Grid.Column="5" Content="隐藏" Margin="5,0"/>
+        		<Button Grid.Column="6" Content="退出" Margin="5,0" Command="{Binding ExitCommand, Mode=OneWay}"/>
         	</Grid>
         </Border>
     </Grid>

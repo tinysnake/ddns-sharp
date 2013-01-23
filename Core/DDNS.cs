@@ -43,7 +43,10 @@ namespace DDnsPod.Core
 
                 var updateResult = await RecordService.UpdateDDNS(domainID, recordID, um.SubDomain, um.LineName);
                 if (updateResult.Status.Code != 1)
-                    throw new APIException(updateResult.Status);
+                    um.LastUpdateIP = updateResult.Status.Message;
+                else
+                    um.LastUpdateIP = updateResult.Info.Value;
+                um.LastUpdatedTime = DateTime.UtcNow;
             }
 
             return currentIP;

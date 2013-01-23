@@ -17,10 +17,13 @@ using Monitor;
 using System.Windows;
 using System.Collections.ObjectModel;
 using DDnsPod.Monitor.Models;
+using System.IO;
+using System.Timers;
+using System.Runtime.InteropServices;
 
 namespace DDnsPod.Monitor.ViewModels
 {
-    public class DDNSMonitorWindowViewModel:ViewModelBase
+    public class DDNSMonitorWindowViewModel : ViewModelBase
     {
         public const string RECORD_FETCH_KEY = "DDNSMonitorWindowViewModel.RECORD_FETCH_KEY";
 
@@ -34,8 +37,10 @@ namespace DDnsPod.Monitor.ViewModels
         {
             Runtime = MonitorIoc.Current.Get<MonitorRuntime>();
             Runtime.SetUpdateList(DDNSPodRuntime.AppConfig.UpdateList);
-            service = ServiceControl.GetService();
-            ServiceStatus = ServiceControl.GetServiceStatus(service);
+            GetServiceStatus();
+            serviceStatusCheker = new Timer(5000);
+            serviceStatusCheker.Elapsed += (o, e) => GetServiceStatus();
+            serviceStatusCheker.Start();
             UpdateCurrentIP();
         }
 
@@ -45,6 +50,7 @@ namespace DDnsPod.Monitor.ViewModels
         }
 
         private ServiceController service;
+        private Timer serviceStatusCheker;
 
         public MonitorRuntime Runtime { get; private set; }
 
@@ -251,6 +257,77 @@ namespace DDnsPod.Monitor.ViewModels
         }
         #endregion
 
+        #region ExitCommand
+        private RelayCommand _exitCommand;
+
+        /// <summary>
+        /// Gets the ExitCommand.
+        /// </summary>
+        public RelayCommand ExitCommand
+        {
+            get
+            {
+                return _exitCommand
+                    ?? (_exitCommand = new RelayCommand(() =>
+                {
+                    Environment.Exit(0);
+                }));
+            }
+        }
+        #endregion
+
+        #region ForceUpdateCommand
+        private RelayCommand _forceUpdateCommand;
+
+        /// <summary>
+        /// Gets the ForceUpdateCommand.
+        /// </summary>
+        public RelayCommand ForceUpdateCommand
+        {
+            get
+            {
+                return _forceUpdateCommand
+                    ?? (_forceUpdateCommand = new RelayCommand(OnForceUpdate));
+            }
+        }
+        #endregion
+
+        #region CheckoutLogCommand
+        private RelayCommand _chkoutLogCommand;
+
+        /// <summary>
+        /// Gets the CheckoutLogCommand.
+        /// </summary>
+        public RelayCommand CheckoutLogCommand
+        {
+            get
+            {
+                return _chkoutLogCommand
+                    ?? (_chkoutLogCommand = new RelayCommand(() =>
+                {
+                    System.Diagnostics.Process.Start("notepad",
+                        Path.Combine(Directory.GetCurrentDirectory(), "ddnspod.info"));
+                }));
+            }
+        }
+        #endregion
+
+        #region ServiceManagementCommand
+        private RelayCommand _svcManageCommand;
+
+        /// <summary>
+        /// Gets the ServiceManagementCommand.
+        /// </summary>
+        public RelayCommand ServiceManagementCommand
+        {
+            get
+            {
+                return _svcManageCommand
+                    ?? (_svcManageCommand = new RelayCommand(OnManageService));
+            }
+        }
+        #endregion
+
         private void OnRecordManaged(UpdateModelWrapper obj)
         {
             if (Runtime.UpdateList.Count(m => m == obj) <= 0)
@@ -265,7 +342,7 @@ namespace DDnsPod.Monitor.ViewModels
 
         private void DeleteRecrod(UpdateModelWrapper um)
         {
-            var mbr = MessageBox.Show("请确认操作.","注意", MessageBoxButton.YesNo);
+            var mbr = MessageBox.Show("请确认操作.", "注意", MessageBoxButton.YesNo);
             if (mbr == MessageBoxResult.Yes)
             {
                 Runtime.UpdateList.Remove(um);
@@ -275,5 +352,102 @@ namespace DDnsPod.Monitor.ViewModels
                 DDNSPodRuntime.SaveAppConfig();
             }
         }
+
+        private async void OnForceUpdate()
+        {
+            var updateModels = from u in Runtime.UpdateList select u.UnWrap();
+            await DDNS.Start(updateModels, true);
+            Runtime.UpdateList = new ObservableCollection<UpdateModelWrapper>(from u in updateModels
+                                                                              select new UpdateModelWrapper(u));
+            DDNSPodRuntime.AppConfig.UpdateList = updateModels.ToList();
+            DDNSPodRuntime.SaveAppConfig();
+        }
+
+        private void GetServiceStatus()
+        {
+            if (service == null)
+                service = ServiceControl.GetService();
+            service.Refresh();
+            ServiceStatus = ServiceControl.GetServiceStatus(service);
+        }
+
+        private async void OnManageService()
+        {
+
+            switch (ServiceStatus)
+            {
+                case ServiceStatus.Running:
+                    MessageBox.Show("服务正在运行..");
+                    break;
+                case ServiceStatus.Stopped:
+                    try
+                    {
+                        service.Start();
+                        GetServiceStatus();
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message);
+                    }
+                    break;
+                case ServiceStatus.NotExist:
+                    InstallService();
+                    break;
+                case ServiceStatus.UnKnown:
+                    MessageBox.Show("无法检测服务状态,请稍候再试.");
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void InstallService()
+        {
+            var dialogResult = MessageBox.Show("尚未安装DDNS服务,该服务将会在开机的时候自动运行,并且每30秒自动更新您的最新IP您的指定记录.在安装之前请确保您正在使用管理员权限运行本程序.是否继续?", "", MessageBoxButton.YesNo);
+            if (dialogResult == MessageBoxResult.Yes)
+            {
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "installService.bat");
+                if (File.Exists(path))
+                {
+                    ShellExecute(IntPtr.Zero, "Open", path, String.Empty, Directory.GetCurrentDirectory(), 0);
+                    var task = new Task(() =>
+                    {
+                        System.Threading.Thread.Sleep(5000);
+                        ServiceStatus = ServiceControl.GetServiceStatus(service);
+                        MessageBox.Show("如果右上角服务状态处于非绿灯状态,请确保您正在使用管理员权限运行本程序,并且程序目录内的文件完整,最后查看程序目录下的DDNSPod.Service.InstallLog和sevice.log日志文件,向社区求助.");
+                        if (service != null)
+                        {
+                            try
+                            {
+                                service.Start();
+                            }
+                            catch (Exception e)
+                            {
+                                MessageBox.Show(e.Message);
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    MessageBox.Show("服务安装脚本丢失,请确保您的DDNSPod的程序目录完整!");
+                }
+            }
+        }
+
+        public override void Cleanup()
+        {
+            serviceStatusCheker.Stop();
+            base.Cleanup();
+        }
+
+        [DllImport("shell32.dll")]
+        public extern static int ShellExecute(IntPtr hwnd,
+        string lpOperation,
+        string lpFile,
+        string lpParameters,
+        string lpDirectory,
+        int nShowCmd
+        );
     }
 }

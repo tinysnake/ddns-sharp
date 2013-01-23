@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +19,8 @@ namespace DDnsPod.Service
         public DDNSPodService()
         {
             InitializeComponent();
+            var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            System.IO.Directory.SetCurrentDirectory(path);
         }
 
         private Logger logger;
@@ -30,7 +34,9 @@ namespace DDnsPod.Service
             timer.Elapsed += timer_Elapsed;
             timer.Start();
 
-            logger.Info("DDNSPodService Stopped");
+            logger.Info("DDNSPodService Started");
+            logger.Info("Assembly.GetEntryAssembly().Location: " + System.Reflection.Assembly.GetEntryAssembly().Location);
+            logger.Info("Environment.CurrentDirectory: "+Environment.CurrentDirectory);
         }
 
         void timer_Elapsed(object sender, ElapsedEventArgs e)
