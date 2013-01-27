@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using DDnsPod.Core;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,9 +19,15 @@ namespace DDnsPod.Service
     {
         public DDNSPodService()
         {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             InitializeComponent();
             var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             System.IO.Directory.SetCurrentDirectory(path);
+        }
+
+        void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            logger.FatalException("服务出现致命异常.", e.ExceptionObject as Exception);
         }
 
         private Logger logger;
@@ -30,23 +37,37 @@ namespace DDnsPod.Service
         protected override void OnStart(string[] args)
         {
             logger = LogManager.GetCurrentClassLogger();
-            timer = new Timer(3000);
+            try
+            {
+                DDNSPodRuntime.LoadAppConfig();
+            }
+            catch (IOException)
+            {
+                logger.Fatal("无法获取到DDnsPod配置,服务停止.");
+                this.Stop();
+                return;
+            }
+
+            timer = new Timer(30000);
             timer.Elapsed += timer_Elapsed;
             timer.Start();
 
-            logger.Info("DDNSPodService Started");
-            logger.Info("Assembly.GetEntryAssembly().Location: " + System.Reflection.Assembly.GetEntryAssembly().Location);
-            logger.Info("Environment.CurrentDirectory: "+Environment.CurrentDirectory);
+            OnJob();
+
         }
 
         void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            logger.Info("DDNSPodService Ticking");
+            OnJob();
         }
 
         protected override void OnStop()
         {
-            logger.Info("DDNSPodService Stopped");
+        }
+
+        private async void OnJob()
+        {
+            await DDNS.Start(DDNSPodRuntime.AppConfig.UpdateList);
         }
     }
 }

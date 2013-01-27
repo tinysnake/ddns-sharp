@@ -18,6 +18,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DDnsPod.Monitor.Models;
 using Ninject;
+using System.Net;
 
 namespace DDnsPod.Monitor.Views
 {
@@ -45,22 +46,31 @@ namespace DDnsPod.Monitor.Views
 
         private async void Login()
         {
-            var userInfo = await CommonService.GetUserInfo();
-            if (userInfo.Status.Code == 1)
+            try
             {
-                var runtime = MonitorIoc.Current.Get<MonitorRuntime>();
-                runtime.UserInfo = userInfo.Info;
-                var win = new DDNSMonitorWindow();
-                win.Show();
-                this.Close();
+                var userInfo = await CommonService.GetUserInfo();
+                if (userInfo.Status.Code == 1)
+                {
+                    var runtime = MonitorIoc.Current.Get<MonitorRuntime>();
+                    runtime.UserInfo = userInfo.Info;
+                    var win = new DDNSMonitorWindow();
+                    if(!MonitorConfig.HideOnStartup)
+                        win.Show();
+                    this.Close();
+                }
+                else if (userInfo.Status.Code == -1)
+                {
+                    ShowLoginWindow();
+                }
+                else
+                {
+                    MessageBox.Show(userInfo.Status.Message);
+                }
             }
-            else if (userInfo.Status.Code == -1)
+            catch (WebException)
             {
+                MessageBox.Show("无法连接至服务器..");
                 ShowLoginWindow();
-            }
-            else
-            {
-                MessageBox.Show(userInfo.Status.Message);
             }
         }
 

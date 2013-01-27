@@ -77,5 +77,16 @@ namespace DDnsPod.Monitor
         {
             get { return MonitorIoc.Current.Get<RecordManageWindowViewModel>(); }
         }
+
+        /// <summary>
+        /// Gets the RecordManageWindowViewModel property.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "This non-static member is needed for data binding purposes.")]
+        public SettingsWindowViewModel SettingsWindowViewModel
+        {
+            get { return MonitorIoc.Current.Get<SettingsWindowViewModel>(); }
+        }
     }
 }

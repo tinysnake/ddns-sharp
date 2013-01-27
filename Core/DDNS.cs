@@ -5,17 +5,31 @@ using System.Text;
 using System.Threading.Tasks;
 using DDnsPod.Core.Services;
 using DDnsPod.Core.Models;
+using NLog;
+using System.Net;
 
 namespace DDnsPod.Core
 {
     public static class DDNS
     {
+        public static Logger logger = LogManager.GetCurrentClassLogger();
+
         public static async Task<string> Start(IEnumerable<UpdateModel> updateModels, bool forceUpdate = false)
         {
             if (updateModels == null)
                 throw new ArgumentNullException();
 
-            string currentIP = await CommonService.GetCurrentIP();
+            
+            string currentIP;
+            try
+            {
+                currentIP = await CommonService.GetCurrentIP();
+            }
+            catch (WebException)
+            {
+                logger.Info("无法连接至服务器.");
+                return String.Empty;
+            }
 
             foreach (var um in updateModels)
             {
@@ -28,25 +42,72 @@ namespace DDnsPod.Core
                         continue;
                 }
                 if (String.IsNullOrEmpty(um.DomainName) || String.IsNullOrEmpty(um.SubDomain))
-                    throw new ArgumentNullException();
+                {
+                    logger.Error("发现无效记录.");
+                }
                 if (String.IsNullOrEmpty(um.LineName))
                     um.LineName = "默认";
 
+                var recordFullName = um.SubDomain + "." + um.DomainName;
 
                 int domainID = um.DomainID;
                 if (domainID <= 0)
-                    domainID = await GetDomainID(um.DomainName);
+                {
+                    try
+                    {
+                        domainID = await GetDomainID(um.DomainName);
+                    }
+                    catch (APIException apiex)
+                    {
+                        logger.ErrorException(recordFullName, apiex);
+                        continue;
+                    }
+                    catch (WebException)
+                    {
+                        logger.Info("无法连接至服务器");
+                        return currentIP;
+                    }
+                }
 
                 int recordID = um.RecordID;
                 if (recordID <= 0)
-                    recordID = await GetRecordID(domainID, um);
+                {
+                    try
+                    {
+                        recordID = await GetRecordID(domainID, um);
+                    }
+                    catch (APIException apiex)
+                    {
+                        logger.ErrorException(recordFullName, apiex);
+                        continue;
+                    }
+                    catch (WebException)
+                    {
+                        logger.Info("无法连接至服务器");
+                        return currentIP;
+                    }
+                }
 
-                var updateResult = await RecordService.UpdateDDNS(domainID, recordID, um.SubDomain, um.LineName);
-                if (updateResult.Status.Code != 1)
-                    um.LastUpdateIP = updateResult.Status.Message;
-                else
-                    um.LastUpdateIP = updateResult.Info.Value;
+                try
+                {
+                    var updateResult = await RecordService.UpdateDDNS(domainID, recordID, um.SubDomain, um.LineName);
+                    if (updateResult.Status.Code != 1)
+                        um.LastUpdateIP = updateResult.Status.Message;
+                    else
+                        um.LastUpdateIP = updateResult.Info.Value;
+                }
+                catch (APIException apiex)
+                {
+                    logger.ErrorException(recordFullName, apiex);
+                    continue;
+                }
+                catch (WebException)
+                {
+                    logger.Info("无法连接至服务器");
+                    return currentIP;
+                }
                 um.LastUpdatedTime = DateTime.UtcNow;
+                logger.Info(recordFullName + " 记录更新更新成功, 新的IP地址为: " + currentIP);
             }
 
             return currentIP;

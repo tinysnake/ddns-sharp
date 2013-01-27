@@ -3,16 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:DDnsPod.Monitor.Components" x:Class="DDnsPod.Monitor.Components.ServiceStatusControl" 
+             xmlns:converters="clr-namespace:DDnsPod.Monitor.Converters"
+             xmlns:local="clr-namespace:DDnsPod.Monitor.Components"
+             x:Class="DDnsPod.Monitor.Components.ServiceStatusControl" 
              mc:Ignorable="d" 
              d:DesignHeight="64" d:DesignWidth="16">
     <UserControl.Resources>
-        <local:ServiceStatusVisibilityConverter x:Key="ServiceStatusVisibilityConverter"/>
+        <converters:ServiceStatusVisibilityConverter x:Key="ServiceStatusVisibilityConverter"/>
     </UserControl.Resources>
     <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-        <Image x:Name="img_running" Height="16" Source="/DDnsPod.Monitor;component/Resources/green_light.png" Width="16" ToolTip="Ddns服务正在运行" Visibility="{Binding Status, ConverterParameter=Running, Converter={StaticResource ServiceStatusVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ServiceStatusControl}}}"/>
-        <Image x:Name="img_stopped" Height="16" Source="/DDnsPod.Monitor;component/Resources/red_light.png" Width="16" ToolTip="Ddns服务已停止" Visibility="{Binding Status, ConverterParameter=Stopped, Converter={StaticResource ServiceStatusVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ServiceStatusControl}}}" />
-        <Image x:Name="img_unknown" Height="16" Width="16" Source="/DDnsPod.Monitor;component/Resources/warning.png" ToolTip="Ddns服务状态未知" Visibility="{Binding Status, ConverterParameter=UnKnow, Converter={StaticResource ServiceStatusVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ServiceStatusControl}}}" />
-        <Image x:Name="img_notexist" Height="16" Width="16" Source="/DDnsPod.Monitor;component/Resources/stop.png" ToolTip="Ddns服务尚未安装" Visibility="{Binding Status, ConverterParameter=NotExist, Converter={StaticResource ServiceStatusVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ServiceStatusControl}}}" />
+        <Image x:Name="img_running" Height="16" Source="../Resources/green_light.ico" Width="16" ToolTip="Ddns服务正在运行" Visibility="{Binding Status, ConverterParameter=Running, Converter={StaticResource ServiceStatusVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ServiceStatusControl}}}"/>
+        <Image x:Name="img_stopped" Height="16" Source="../Resources/red_light.ico" Width="16" ToolTip="Ddns服务已停止" Visibility="{Binding Status, ConverterParameter=Stopped, Converter={StaticResource ServiceStatusVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ServiceStatusControl}}}" />
+        <Image x:Name="img_unknown" Height="16" Width="16" Source="../Resources/warning.ico" ToolTip="Ddns服务状态未知" Visibility="{Binding Status, ConverterParameter=UnKnown, Converter={StaticResource ServiceStatusVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ServiceStatusControl}}}" />
+        <Image x:Name="img_notexist" Height="16" Width="16" Source="../Resources/stop.ico" ToolTip="Ddns服务尚未安装" Visibility="{Binding Status, ConverterParameter=NotExist, Converter={StaticResource ServiceStatusVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ServiceStatusControl}}}" />
     </StackPanel>
 </UserControl>

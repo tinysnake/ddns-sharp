@@ -12,6 +12,7 @@ using System.Windows;
 using Monitor;
 using DDnsPod.Monitor.Models;
 using Ninject;
+using System.Net;
 
 namespace DDnsPod.Monitor.ViewModels
 {
@@ -178,8 +179,16 @@ namespace DDnsPod.Monitor.ViewModels
 
         private async void UserLogin()
         {
-            System.Diagnostics.Debug.WriteLine("email: " + DDNSPodRuntime.AppConfig.Email + ", password: " + DDNSPodRuntime.AppConfig.Password);
-            var userInfo = await CommonService.GetUserInfo();
+            UserInfoReturnValue userInfo;
+            try
+            {
+                userInfo = await CommonService.GetUserInfo();
+            }
+            catch(WebException)
+            {
+                MessageBox.Show("无法连接至服务器.");
+                return;
+            }
             if (userInfo.Status.Code == 1)
             {
                 _runtime.UserInfo = userInfo.Info;

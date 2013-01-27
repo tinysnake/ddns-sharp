@@ -20,6 +20,9 @@ using DDnsPod.Monitor.Models;
 using System.IO;
 using System.Timers;
 using System.Runtime.InteropServices;
+using NLog;
+using System.ComponentModel;
+using System.Net;
 
 namespace DDnsPod.Monitor.ViewModels
 {
@@ -37,6 +40,7 @@ namespace DDnsPod.Monitor.ViewModels
         {
             Runtime = MonitorIoc.Current.Get<MonitorRuntime>();
             Runtime.SetUpdateList(DDNSPodRuntime.AppConfig.UpdateList);
+            service = ServiceControl.GetService();
             GetServiceStatus();
             serviceStatusCheker = new Timer(5000);
             serviceStatusCheker.Elapsed += (o, e) => GetServiceStatus();
@@ -49,6 +53,7 @@ namespace DDnsPod.Monitor.ViewModels
             CurrentIP = await CommonService.GetCurrentIP();
         }
 
+        private Logger logger = LogManager.GetCurrentClassLogger();
         private ServiceController service;
         private Timer serviceStatusCheker;
 
@@ -270,6 +275,15 @@ namespace DDnsPod.Monitor.ViewModels
                 return _exitCommand
                     ?? (_exitCommand = new RelayCommand(() =>
                 {
+                    var wins = Application.Current.Windows;
+                    foreach (Window win in wins)
+                    {
+                        if (win is DDNSMonitorWindow)
+                        {
+                            (win as DDNSMonitorWindow).Dispose();
+                        }
+                        win.Close();
+                    }
                     Environment.Exit(0);
                 }));
             }
@@ -313,17 +327,57 @@ namespace DDnsPod.Monitor.ViewModels
         #endregion
 
         #region ServiceManagementCommand
-        private RelayCommand _svcManageCommand;
+        private RelayCommand<string> _svcManageCommand;
 
         /// <summary>
         /// Gets the ServiceManagementCommand.
         /// </summary>
-        public RelayCommand ServiceManagementCommand
+        public RelayCommand<string> ServiceManagementCommand
         {
             get
             {
                 return _svcManageCommand
-                    ?? (_svcManageCommand = new RelayCommand(OnManageService));
+                    ?? (_svcManageCommand = new RelayCommand<string>(OnManageService));
+            }
+        }
+        #endregion
+
+        #region OpenSettingsCommand
+        private RelayCommand _openSettingsCommand;
+
+        /// <summary>
+        /// Gets the OpenSettingsCommand.
+        /// </summary>
+        public RelayCommand OpenSettingsCommand
+        {
+            get
+            {
+                return _openSettingsCommand
+                    ?? (_openSettingsCommand = new RelayCommand(() =>
+                {
+                    var win = new SettingsWindow();
+                    win.ShowDialog();
+                }));
+            }
+        }
+        #endregion
+
+        #region OpenAboutWindowCommand
+        private RelayCommand _openAboutWinCommand;
+
+        /// <summary>
+        /// Gets the OpenAboutWindowCommand.
+        /// </summary>
+        public RelayCommand OpenAboutWindowCommand
+        {
+            get
+            {
+                return _openAboutWinCommand
+                    ?? (_openAboutWinCommand = new RelayCommand(() =>
+                {
+                    var win = new AboutWindow();
+                    win.ShowDialog();
+                }));
             }
         }
         #endregion
@@ -356,7 +410,14 @@ namespace DDnsPod.Monitor.ViewModels
         private async void OnForceUpdate()
         {
             var updateModels = from u in Runtime.UpdateList select u.UnWrap();
-            await DDNS.Start(updateModels, true);
+            try
+            {
+                await DDNS.Start(updateModels, true);
+            }
+            catch(WebException)
+            {
+                MessageBox.Show("无法连接至服务器.");
+            }
             Runtime.UpdateList = new ObservableCollection<UpdateModelWrapper>(from u in updateModels
                                                                               select new UpdateModelWrapper(u));
             DDNSPodRuntime.AppConfig.UpdateList = updateModels.ToList();
@@ -365,36 +426,60 @@ namespace DDnsPod.Monitor.ViewModels
 
         private void GetServiceStatus()
         {
-            if (service == null)
-                service = ServiceControl.GetService();
-            service.Refresh();
+            if (service != null)
+                service.Refresh();
             ServiceStatus = ServiceControl.GetServiceStatus(service);
         }
 
-        private async void OnManageService()
+        private void OnManageService(string cmd)
         {
-
-            switch (ServiceStatus)
+            switch (cmd)
             {
-                case ServiceStatus.Running:
-                    MessageBox.Show("服务正在运行..");
-                    break;
-                case ServiceStatus.Stopped:
-                    try
+                case "start":
+                    if (ServiceStatus == ServiceStatus.Stopped)
                     {
-                        service.Start();
-                        GetServiceStatus();
+                        try
+                        {
+                            service.Start();
+                            GetServiceStatus();
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show(e.Message);
+                        }
                     }
-                    catch (Exception e)
+                    else
+                        MessageBox.Show("无法启动服务.");
+                    break;
+                case "stop":
+                    if (ServiceStatus == ServiceStatus.Running)
                     {
-                        MessageBox.Show(e.Message);
+                        try
+                        {
+                            service.Stop();
+                            GetServiceStatus();
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show(e.Message);
+                        }
                     }
+                    else
+                        MessageBox.Show("无法停止服务.");
                     break;
-                case ServiceStatus.NotExist:
-                    InstallService();
+                case "install":
+                    if (ServiceStatus == ServiceStatus.NotExist)
+                    {
+                        InstallService();
+                    }
+                    else
+                        MessageBox.Show("服务已存在.");
                     break;
-                case ServiceStatus.UnKnown:
-                    MessageBox.Show("无法检测服务状态,请稍候再试.");
+                case "uninstall":
+                    if (ServiceStatus != ServiceStatus.NotExist)
+                    {
+                        UninstallService();
+                    }
                     break;
                 default:
                     break;
@@ -413,20 +498,72 @@ namespace DDnsPod.Monitor.ViewModels
                     var task = new Task(() =>
                     {
                         System.Threading.Thread.Sleep(5000);
-                        ServiceStatus = ServiceControl.GetServiceStatus(service);
-                        MessageBox.Show("如果右上角服务状态处于非绿灯状态,请确保您正在使用管理员权限运行本程序,并且程序目录内的文件完整,最后查看程序目录下的DDNSPod.Service.InstallLog和sevice.log日志文件,向社区求助.");
-                        if (service != null)
+                        try
                         {
-                            try
+                            if (service != null)
+                                service.Dispose();
+                            service = ServiceControl.GetService();
+                            ServiceStatus = ServiceControl.GetServiceStatus(service);
+                            MessageBox.Show("如果左下角的服务状态在1分钟之后还是处于非绿灯状态,请确保您正在使用管理员权限运行本程序,并且程序目录内的文件完整,最后查看程序目录下的DDNSPod.Service.InstallLog和sevice.log日志文件,并向社区求助.");
+                            if (service != null)
                             {
-                                service.Start();
-                            }
-                            catch (Exception e)
-                            {
-                                MessageBox.Show(e.Message);
+                                try
+                                {
+                                    service.Start();
+                                }
+                                catch (Exception e)
+                                {
+                                    MessageBox.Show(e.Message);
+                                }
                             }
                         }
+                        catch (Win32Exception ex)
+                        {
+                            logger.ErrorException(ex.Message, ex);
+                        }
                     });
+                    task.Start();
+                }
+                else
+                {
+                    MessageBox.Show("服务安装脚本丢失,请确保您的DDNSPod的程序目录完整!");
+                }
+            }
+        }
+
+        private void UninstallService()
+        {
+            var dialogResult = MessageBox.Show("您确定这么做吗?", "", MessageBoxButton.YesNo);
+            if (dialogResult == MessageBoxResult.Yes)
+            {
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "uninstallService.bat");
+                if (File.Exists(path))
+                {
+                    if (service != null)
+                    {
+                        try
+                        {
+                            if(service.CanStop)
+                            service.Stop();
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show(e.Message);
+                        }
+                        ShellExecute(IntPtr.Zero, "Open", path, String.Empty, Directory.GetCurrentDirectory(), 0);
+                        var task = new Task(() =>
+                        {
+                            System.Threading.Thread.Sleep(5000);
+                            if (service != null)
+                            {
+                                service.Dispose();
+                                service = ServiceControl.GetService();
+                            }
+                            ServiceStatus = ServiceControl.GetServiceStatus(service);
+                            MessageBox.Show("如果左下角的服务状态在1分钟之后还是处于非红色叉叉状态,请确保您正在使用管理员权限运行本程序,并且程序目录内的文件完整,最后查看程序目录下的DDNSPod.Service.InstallLog和sevice.log日志文件,并向社区求助.");
+                        });
+                        task.Start();
+                    }
                 }
                 else
                 {
@@ -437,17 +574,13 @@ namespace DDnsPod.Monitor.ViewModels
 
         public override void Cleanup()
         {
+            if (service != null)
+                service.Dispose();
             serviceStatusCheker.Stop();
             base.Cleanup();
         }
 
         [DllImport("shell32.dll")]
-        public extern static int ShellExecute(IntPtr hwnd,
-        string lpOperation,
-        string lpFile,
-        string lpParameters,
-        string lpDirectory,
-        int nShowCmd
-        );
+        public extern static int ShellExecute(IntPtr hwnd, string lpOperation, string lpFile, string lpParameters, string lpDirectory, int nShowCmd);
     }
 }

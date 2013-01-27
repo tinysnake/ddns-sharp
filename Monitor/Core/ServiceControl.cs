@@ -30,16 +30,22 @@ namespace DDnsPod.Monitor.Core
             if (sc != null)
             {
                 var status = ServiceStatus.UnKnown;
-                switch (sc.Status)
+                try
                 {
-                    case ServiceControllerStatus.Running:
-                        status = ServiceStatus.Running;
-                        break;
-                    case ServiceControllerStatus.Stopped:
-                        status = ServiceStatus.Stopped;
-                        break;
-                    default:
-                        break;
+                    switch (sc.Status)
+                    {
+                        case ServiceControllerStatus.Running:
+                            status = ServiceStatus.Running;
+                            break;
+                        case ServiceControllerStatus.Stopped:
+                            status = ServiceStatus.Stopped;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                catch
+                {
                 }
                 return status;
             }

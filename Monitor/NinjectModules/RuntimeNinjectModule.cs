@@ -21,6 +21,7 @@ namespace DDnsPod.Monitor.NinjectModules
             Bind<LoginWindowViewModel>().ToSelf();
             Bind<DDNSMonitorWindowViewModel>().ToSelf();
             Bind<RecordManageWindowViewModel>().ToSelf();
+            Bind<SettingsWindowViewModel>().ToSelf();
         }
     }
 }

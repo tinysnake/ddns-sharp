@@ -1,6 +1,7 @@
 ﻿<Application x:Class="Monitor.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:DDnsPod.Monitor.ViewModels"
              xmlns:local="clr-namespace:DDnsPod.Monitor"
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>

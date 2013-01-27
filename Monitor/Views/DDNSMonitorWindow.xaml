@@ -4,8 +4,13 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:cmd="http://www.galasoft.ch/mvvmlight"
         xmlns:local="clr-namespace:DDnsPod.Monitor.Core"
-        xmlns:Components="clr-namespace:DDnsPod.Monitor.Components" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" mc:Ignorable="d" x:Class="DDnsPod.Monitor.Views.DDNSMonitorWindow"
-        Title="DDNSMonitor" Height="480" Width="640" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Icon="/DDnsPod.Monitor;component/Resources/logo.png">
+        xmlns:comps="clr-namespace:DDnsPod.Monitor.Components"
+        xmlns:vm="clr-namespace:DDnsPod.Monitor.ViewModels"
+        xmlns:converters="clr-namespace:DDnsPod.Monitor.Converters" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" mc:Ignorable="d" x:Class="DDnsPod.Monitor.Views.DDNSMonitorWindow"
+        Title="DDnsPod" Height="480" Width="640" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Icon="/DDnsPod.Monitor;component/Resources/logo.png">
+	<Window.Resources>
+		<converters:ServiceStatusVisibilityConverter x:Key="ServiceStatusVisibilityConverter"/>
+	</Window.Resources>
 
 	<Window.DataContext>
 		<Binding Path="DDNSMonitorWindowViewModel" Source="{StaticResource Locator}"/>
@@ -17,6 +22,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Border Grid.Column="0" BorderBrush="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" BorderThickness="0,0,0,2">
             <Grid Grid.Row="0" Margin="5,5,5,0" Height="45">
@@ -27,14 +33,17 @@
                 <Image Grid.Column="0" Source="/DDnsPod.Monitor;component/Resources/big logo.png" Height="45" />
                 <StackPanel Grid.Column="1" Margin="0,2" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Label Content="{Binding Runtime.UserInfo.Model.Name}" VerticalAlignment="Center" Margin="10,0"/>
-                    <Label Content="当前IP:" VerticalAlignment="Center" Margin="0,0,-2,0"/>
-                    <Label Content="{Binding CurrentIP}" VerticalAlignment="Center" Margin="-5,0,0,0"/>
-                    <Label Content="服务状态:" VerticalAlignment="Center"/>
-                    <Components:ServiceStatusControl Status="{Binding ServiceStatus}"/>
-                    <TextBlock Text="注销账号" Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" TextDecorations="Underline"  VerticalAlignment="Center" Height="15.24" Margin="10,0" Cursor="Hand">
+                    <TextBlock Text="注销账号" Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" TextDecorations="Underline"  VerticalAlignment="Center" Height="15.24" Margin="10,0,2,0" Cursor="Hand">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeftButtonDown">
         						<cmd:EventToCommand CommandParameter="{Binding}" Command="{Binding LogoutCommand, Mode=OneWay}"/>
+        					</i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </TextBlock>
+                    <TextBlock Text="关闭软件" Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" TextDecorations="Underline"  VerticalAlignment="Center" Height="15.24" Margin="2,0,0,0" Cursor="Hand">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeftButtonDown">
+        						<cmd:EventToCommand CommandParameter="{Binding}" Command="{Binding ExitCommand, Mode=OneWay}"/>
         					</i:EventTrigger>
                         </i:Interaction.Triggers>
                     </TextBlock>
@@ -64,29 +73,50 @@
         	</ListBox.Resources>
         	<ListBox.ItemTemplate>
         		<DataTemplate>
-        			<Components:UpdateModelControl Model="{Binding Mode=OneWay}" DeleteCommand="{Binding DataContext.DeleteRecordCommand, Mode=OneWay, Source={StaticResource spy}}" DisableCommand="{Binding DataContext.DisableRecordCommand, Mode=OneWay, Source={StaticResource spy}}" EditCommand="{Binding DataContext.EditRecordCommand, Mode=OneWay, Source={StaticResource spy}}" EnableCommand="{Binding DataContext.EnableRecordCommand, Mode=OneWay, Source={StaticResource spy}}"/>
+        			<comps:UpdateModelControl Model="{Binding Mode=OneWay}" DeleteCommand="{Binding DataContext.DeleteRecordCommand, Mode=OneWay, Source={StaticResource spy}}" DisableCommand="{Binding DataContext.DisableRecordCommand, Mode=OneWay, Source={StaticResource spy}}" EditCommand="{Binding DataContext.EditRecordCommand, Mode=OneWay, Source={StaticResource spy}}" EnableCommand="{Binding DataContext.EnableRecordCommand, Mode=OneWay, Source={StaticResource spy}}"/>
         		</DataTemplate>
         	</ListBox.ItemTemplate>
         </ListBox>
         <Border Grid.Row="3" Margin="0,5,0,0" BorderThickness="0,2,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" Padding="5">
-        	<Grid>
-        		<Grid.ColumnDefinitions>
-        			<ColumnDefinition Width="*" />
-        			<ColumnDefinition Width="*" />
-        			<ColumnDefinition Width="*" />
-        			<ColumnDefinition Width="*" />
-        			<ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-        		<Button Grid.Column="0" Content="启动服务" Margin="5,0" Command="{Binding ServiceManagementCommand, Mode=OneWay}"/>
-        		<Button Grid.Column="1" Content="强制同步" Margin="5,0" Command="{Binding ForceUpdateCommand, Mode=OneWay}"/>
-                <Button Grid.Column="2" Content="查看日志" Margin="5,0" Command="{Binding CheckoutLogCommand, Mode=OneWay}"/>
-                <Button Grid.Column="3" Content="添加记录" Margin="5,0" Command="{Binding AddRecordCommand, Mode=OneWay}"/>
-        		<Button Grid.Column="4" Content="关于" Margin="5,0"/>
-        		<Button Grid.Column="5" Content="隐藏" Margin="5,0"/>
-        		<Button Grid.Column="6" Content="退出" Margin="5,0" Command="{Binding ExitCommand, Mode=OneWay}"/>
-        	</Grid>
+        	<StackPanel Orientation="Vertical">
+        		
+        		<Grid>
+        			<Grid.ColumnDefinitions>
+        				<ColumnDefinition Width="Auto" />
+        				<ColumnDefinition Width="*" />
+        				<ColumnDefinition Width="*" />
+        				<ColumnDefinition Width="*" />
+        				<ColumnDefinition Width="*" />
+        				<ColumnDefinition Width="*" />
+        				<ColumnDefinition Width="*" />
+        			</Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="启动服务" Margin="5,0" Command="{Binding ServiceManagementCommand}" CommandParameter="start" Visibility="{Binding ServiceStatus, ConverterParameter=Stopped, Converter={StaticResource ServiceStatusVisibilityConverter}}" Width="79"/>
+                        <Button Grid.Column="0" Content="停止服务" Margin="5,0" Command="{Binding ServiceManagementCommand}" CommandParameter="stop" Visibility="{Binding ServiceStatus, ConverterParameter=Running, Converter={StaticResource ServiceStatusVisibilityConverter}}" Width="79"/>
+                        <Button Grid.Column="1" Content="安装服务" Margin="5,0" Command="{Binding ServiceManagementCommand}" CommandParameter="install" Visibility="{Binding ServiceStatus, ConverterParameter=NotExist, Converter={StaticResource ServiceStatusVisibilityConverter}}" Width="79"/>
+                        <Button Grid.Column="1" Content="卸载服务" Margin="5,0" Command="{Binding ServiceManagementCommand}" CommandParameter="uninstall" Visibility="{Binding ServiceStatus, ConverterParameter=Running\|Stopped, Converter={StaticResource ServiceStatusVisibilityConverter}}" Width="79"/>
+                        <Button Grid.Column="0" Grid.ColumnSpan="2" Content="正在操作..." Margin="5,0" IsEnabled="False" Visibility="{Binding ServiceStatus, ConverterParameter=UnKnown, Converter={StaticResource ServiceStatusVisibilityConverter}}" Width="79" />
+                    </Grid>
+                    <Button Grid.Column="1" Content="强制同步" Margin="5,0" Command="{Binding ForceUpdateCommand, Mode=OneWay}"/>
+        			<Button Grid.Column="2" Content="查看日志" Margin="5,0" Command="{Binding CheckoutLogCommand, Mode=OneWay}"/>
+        			<Button Grid.Column="3" Content="添加记录" Margin="5,0" Command="{Binding AddRecordCommand, Mode=OneWay}"/>
+        			<Button Grid.Column="4" Content="设置" Margin="5,0" Command="{Binding OpenSettingsCommand, Mode=OneWay}"/>
+                    <Button Grid.Column="5" Content="关于" Margin="5,0" Command="{Binding OpenAboutWindowCommand, Mode=OneWay}"/>
+        			<Button x:Name="btn_hide" Grid.Column="6" Content="隐藏" Margin="5,0" Click="btn_hide_Click"/>
+        		</Grid>
+            </StackPanel>
         </Border>
+        <StatusBar Grid.Row="4">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="服务状态:" VerticalAlignment="Center" Margin="0,-4"/>
+                <comps:ServiceStatusControl Status="{Binding ServiceStatus}" Margin="0,0,5,0" Height="16"/>
+                <Label Content="当前IP:" VerticalAlignment="Center" Margin="0,-4"/>
+                <Label Content="{Binding CurrentIP}" VerticalAlignment="Center" Margin="0,-4"/>
+            </StackPanel>
+        </StatusBar>
     </Grid>
 </Window>

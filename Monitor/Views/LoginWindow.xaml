@@ -6,7 +6,7 @@
     xmlns:vm="clr-namespace:GalaSoft.MvvmLight;assembly=GalaSoft.MvvmLight.WPF45"
 	xmlns:Converters="clr-namespace:DDnsPod.Monitor.Converters"
 	x:Class="DDnsPod.Monitor.Views.LoginWindow"
-    Title="DDnsPod" Width="300" ResizeMode="NoResize" SizeToContent="Height" WindowStartupLocation="CenterScreen" Icon="/DDnsPod.Monitor;component/Resources/logo.png">
+    Title="登陆 - DDnsPod" Width="300" ResizeMode="NoResize" SizeToContent="Height" WindowStartupLocation="CenterScreen" Icon="/DDnsPod.Monitor;component/Resources/logo.png">
     <Window.Resources>
         <Converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </Window.Resources>

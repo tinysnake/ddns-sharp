@@ -72,30 +72,4 @@ namespace DDnsPod.Monitor.Components
             typeof(ServiceStatusControl), new PropertyMetadata(ServiceStatus.UnKnown));
 
     }
-
-    class ServiceStatusVisibilityConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            switch (parameter as String)
-            {
-                case "Running":
-                    return (ServiceStatus)value == ServiceStatus.Running ? Visibility.Visible : Visibility.Collapsed;
-                case "Stopped":
-                    return (ServiceStatus)value == ServiceStatus.Stopped ? Visibility.Visible : Visibility.Collapsed;
-                case "NotExist":
-                    return (ServiceStatus)value == ServiceStatus.NotExist ? Visibility.Visible : Visibility.Collapsed;
-                case "UnKnow":
-                    return (ServiceStatus)value == ServiceStatus.UnKnown ? Visibility.Visible : Visibility.Collapsed;
-                default:
-                    return Visibility.Collapsed;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
 }

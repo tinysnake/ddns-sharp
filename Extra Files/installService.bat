@@ -1,0 +1,1 @@
+InstallUtil DDnsPod.Service.exe
