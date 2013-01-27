@@ -1,4 +1,4 @@
-#### DDnsPod是一个易用的 Windows 7+ 平台下的 DDNS 软件,它需要.NET 4.5框架才能运行.
+#### DDnsPod是一个适用于个人易用的 Windows 7+ 平台下的 DDNS 软件,它需要.NET 4.5框架才能运行.
 当前推荐下载地址: [百度云网盘](http://pan.baidu.com/share/link?shareid=230448&uk=1040525562)
 
 .NET4.5框架下载地址: [在线安装包](http://go.microsoft.com/fwlink/?LinkId=225704), [离线安装包](http://go.microsoft.com/fwlink/?LinkId=225702)
@@ -7,7 +7,7 @@
 
 当前服务版本号: `0.1.4776.5061`
 
-##  DDns的源代码需要以下第三方库支持才能成功编译:
+## DDnsPod的源代码需要以下第三方库支持才能成功编译:
 
 建议使用[Nuget](http://nuget.org/)来管理这些库.
 
