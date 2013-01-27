@@ -5,4 +5,5 @@ packages/
 packages.config
 *.suo
 *.user
-Console
+/Console
+/Releases
