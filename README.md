@@ -70,4 +70,4 @@ A: 我坚决按照dnspod的开发要求所制作的软件,本地保存的密码�
 
 ## 软件界面截图:
 
-![](http://ww3.sinaimg.cn/large/74262f0ejw1e18lqko2qoj.jpg)
+![](https://gitcafe.com/snake/DDnsSharp/raw/master/misc/screenshot.jpg)
