@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -16,6 +18,8 @@ namespace Monitor
     {
         public App()
         {
+            var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            System.IO.Directory.SetCurrentDirectory(path);
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
         }
 
