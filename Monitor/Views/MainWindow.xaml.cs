@@ -1,7 +1,7 @@
-﻿using DDnsPod.Monitor.Core;
-using DDnsPod.Core;
-using DDnsPod.Core.Models;
-using DDnsPod.Core.Services;
+﻿using DDnsSharp.Monitor.Core;
+using DDnsSharp.Core;
+using DDnsSharp.Core.Models;
+using DDnsSharp.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +16,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using DDnsPod.Monitor.Models;
+using DDnsSharp.Monitor.Models;
 using Ninject;
 using System.Net;
 
-namespace DDnsPod.Monitor.Views
+namespace DDnsSharp.Monitor.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -30,8 +30,8 @@ namespace DDnsPod.Monitor.Views
         public MainWindow()
         {
             ViewModelLocator.Setup();
-            DDNSPodRuntime.LoadAppConfig();
-            var config = DDNSPodRuntime.AppConfig;
+            DDnsSharpRuntime.LoadAppConfig();
+            var config = DDnsSharpRuntime.AppConfig;
             if (String.IsNullOrWhiteSpace(config.Email) ||
                 String.IsNullOrWhiteSpace(config.Password))
             {

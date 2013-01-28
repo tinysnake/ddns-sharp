@@ -1,5 +1,5 @@
-﻿using DDnsPod.Monitor.Core;
-using DDnsPod.Monitor.Views;
+﻿using DDnsSharp.Monitor.Core;
+using DDnsSharp.Monitor.Views;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
@@ -9,7 +9,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows;
 
-namespace DDnsPod.Monitor.ViewModels
+namespace DDnsSharp.Monitor.ViewModels
 {
     /// <summary>
     /// This class contains properties that a View can data bind to.
@@ -44,7 +44,7 @@ namespace DDnsPod.Monitor.ViewModels
         {
             get
             {
-                return rk.GetValue("DDnsPod") != null ? true : false;
+                return rk.GetValue("DDnsSharp") != null ? true : false;
             }
 
             set
@@ -57,11 +57,11 @@ namespace DDnsPod.Monitor.ViewModels
                 RaisePropertyChanging(IsRunOnStartupPropertyName);
                 if (value)
                 {
-                    rk.SetValue("DDnsPod", Assembly.GetExecutingAssembly().Location);
+                    rk.SetValue("DDnsSharp", Assembly.GetExecutingAssembly().Location);
                 }
                 else
                 {
-                    rk.DeleteValue("DDnsPod", false);
+                    rk.DeleteValue("DDnsSharp", false);
                 }
                 RaisePropertyChanged(IsRunOnStartupPropertyName);
             }

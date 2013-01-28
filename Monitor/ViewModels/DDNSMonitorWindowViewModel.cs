@@ -1,30 +1,25 @@
-﻿using DDnsPod.Monitor.Core;
-using DDnsPod.Monitor.Design;
-using DDnsPod.Monitor.Views;
-using DDnsPod.Core.Models;
-using DDnsPod.Core.Services;
+﻿using DDnsSharp.Core;
+using DDnsSharp.Core.Services;
+using DDnsSharp.Monitor.Core;
+using DDnsSharp.Monitor.Models;
+using DDnsSharp.Monitor.Views;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using Ninject;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ServiceProcess;
-using DDnsPod.Core;
 using Monitor;
-using System.Windows;
-using System.Collections.ObjectModel;
-using DDnsPod.Monitor.Models;
-using System.IO;
-using System.Timers;
-using System.Runtime.InteropServices;
+using Ninject;
 using NLog;
+using System;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
+using System.ServiceProcess;
+using System.Threading.Tasks;
+using System.Timers;
+using System.Windows;
 
-namespace DDnsPod.Monitor.ViewModels
+namespace DDnsSharp.Monitor.ViewModels
 {
     public class DDNSMonitorWindowViewModel : ViewModelBase
     {
@@ -39,12 +34,11 @@ namespace DDnsPod.Monitor.ViewModels
         private void Initialize()
         {
             Runtime = MonitorIoc.Current.Get<MonitorRuntime>();
-            Runtime.SetUpdateList(DDNSPodRuntime.AppConfig.UpdateList);
+            Runtime.SetUpdateList(DDnsSharpRuntime.AppConfig.UpdateList);
             service = ServiceControl.GetService();
             GetServiceStatus();
-            serviceStatusCheker = new Timer(5000);
-            serviceStatusCheker.Elapsed += (o, e) => GetServiceStatus();
-            serviceStatusCheker.Start();
+            serviceStatusCheker = TimerDispatch.Current.AddInterval((m)=>GetServiceStatus(),5000);
+            updateListRefresher = TimerDispatch.Current.AddInterval((m) => RefreshUpdateList(), 15000);
             UpdateCurrentIP();
         }
 
@@ -55,7 +49,8 @@ namespace DDnsPod.Monitor.ViewModels
 
         private Logger logger = LogManager.GetCurrentClassLogger();
         private ServiceController service;
-        private Timer serviceStatusCheker;
+        private TimerModel serviceStatusCheker;
+        private TimerModel updateListRefresher;
 
         public MonitorRuntime Runtime { get; private set; }
 
@@ -168,9 +163,9 @@ namespace DDnsPod.Monitor.ViewModels
                 {
                     um.Enabled = true;
 
-                    DDNSPodRuntime.AppConfig.UpdateList = (from w in Runtime.UpdateList
+                    DDnsSharpRuntime.AppConfig.UpdateList = (from w in Runtime.UpdateList
                                                            select w.UnWrap()).ToList();
-                    DDNSPodRuntime.SaveAppConfig();
+                    DDnsSharpRuntime.SaveAppConfig();
                 }));
             }
         }
@@ -192,9 +187,9 @@ namespace DDnsPod.Monitor.ViewModels
                 {
                     um.Enabled = false;
 
-                    DDNSPodRuntime.AppConfig.UpdateList = (from w in Runtime.UpdateList
+                    DDnsSharpRuntime.AppConfig.UpdateList = (from w in Runtime.UpdateList
                                                            select w.UnWrap()).ToList();
-                    DDNSPodRuntime.SaveAppConfig();
+                    DDnsSharpRuntime.SaveAppConfig();
                 }));
             }
         }
@@ -233,11 +228,7 @@ namespace DDnsPod.Monitor.ViewModels
             get
             {
                 return _deleteRecordCommand
-                    ?? (_deleteRecordCommand = new RelayCommand<UpdateModelWrapper>(
-                (um) =>
-                {
-                    um.Enabled = true;
-                }));
+                    ?? (_deleteRecordCommand = new RelayCommand<UpdateModelWrapper>(DeleteRecrod));
             }
         }
         #endregion
@@ -389,9 +380,9 @@ namespace DDnsPod.Monitor.ViewModels
                 Runtime.UpdateList.Add(obj);
             }
 
-            DDNSPodRuntime.AppConfig.UpdateList = (from w in Runtime.UpdateList
+            DDnsSharpRuntime.AppConfig.UpdateList = (from w in Runtime.UpdateList
                                                    select w.UnWrap()).ToList();
-            DDNSPodRuntime.SaveAppConfig();
+            DDnsSharpRuntime.SaveAppConfig();
         }
 
         private void DeleteRecrod(UpdateModelWrapper um)
@@ -401,9 +392,9 @@ namespace DDnsPod.Monitor.ViewModels
             {
                 Runtime.UpdateList.Remove(um);
 
-                DDNSPodRuntime.AppConfig.UpdateList = (from w in Runtime.UpdateList
+                DDnsSharpRuntime.AppConfig.UpdateList = (from w in Runtime.UpdateList
                                                        select w.UnWrap()).ToList();
-                DDNSPodRuntime.SaveAppConfig();
+                DDnsSharpRuntime.SaveAppConfig();
             }
         }
 
@@ -418,10 +409,9 @@ namespace DDnsPod.Monitor.ViewModels
             {
                 MessageBox.Show("无法连接至服务器.");
             }
-            Runtime.UpdateList = new ObservableCollection<UpdateModelWrapper>(from u in updateModels
-                                                                              select new UpdateModelWrapper(u));
-            DDNSPodRuntime.AppConfig.UpdateList = updateModels.ToList();
-            DDNSPodRuntime.SaveAppConfig();
+            Runtime.SetUpdateList(updateModels);
+            DDnsSharpRuntime.AppConfig.UpdateList = updateModels.ToList();
+            DDnsSharpRuntime.SaveAppConfig();
         }
 
         private void GetServiceStatus()
@@ -429,6 +419,12 @@ namespace DDnsPod.Monitor.ViewModels
             if (service != null)
                 service.Refresh();
             ServiceStatus = ServiceControl.GetServiceStatus(service);
+        }
+
+        private void RefreshUpdateList()
+        {
+            DDnsSharpRuntime.LoadAppConfig();
+            Runtime.SetUpdateList(DDnsSharpRuntime.AppConfig.UpdateList);
         }
 
         private void OnManageService(string cmd)
@@ -576,7 +572,8 @@ namespace DDnsPod.Monitor.ViewModels
         {
             if (service != null)
                 service.Dispose();
-            serviceStatusCheker.Stop();
+            TimerDispatch.Current.RemoveTimer(serviceStatusCheker);
+            TimerDispatch.Current.RemoveTimer(updateListRefresher);
             base.Cleanup();
         }
 

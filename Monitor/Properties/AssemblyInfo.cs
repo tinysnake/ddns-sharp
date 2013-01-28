@@ -7,11 +7,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DDnsPod Monitor")]
+[assembly: AssemblyTitle("DDnsSharp Monitor")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("汤非凡")]
-[assembly: AssemblyProduct("DDnsPod Monitor")]
+[assembly: AssemblyProduct("DDnsSharp Monitor")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

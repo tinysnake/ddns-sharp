@@ -1,8 +1,8 @@
-﻿using DDnsPod.Monitor.Core;
-using DDnsPod.Monitor.Views;
-using DDnsPod.Core;
-using DDnsPod.Core.Models;
-using DDnsPod.Core.Services;
+﻿using DDnsSharp.Monitor.Core;
+using DDnsSharp.Monitor.Views;
+using DDnsSharp.Core;
+using DDnsSharp.Core.Models;
+using DDnsSharp.Core.Services;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
@@ -10,11 +10,11 @@ using System;
 using System.Timers;
 using System.Windows;
 using Monitor;
-using DDnsPod.Monitor.Models;
+using DDnsSharp.Monitor.Models;
 using Ninject;
 using System.Net;
 
-namespace DDnsPod.Monitor.ViewModels
+namespace DDnsSharp.Monitor.ViewModels
 {
     /// <summary>
     /// This class contains properties that a View can data bind to.
@@ -53,18 +53,18 @@ namespace DDnsPod.Monitor.ViewModels
         {
             get
             {
-                return DDNSPodRuntime.AppConfig.Email;
+                return DDnsSharpRuntime.AppConfig.Email;
             }
 
             set
             {
-                if (DDNSPodRuntime.AppConfig.Email == value)
+                if (DDnsSharpRuntime.AppConfig.Email == value)
                 {
                     return;
                 }
 
                 RaisePropertyChanging(LoginEmailPropertyName);
-                DDNSPodRuntime.AppConfig.Email = value;
+                DDnsSharpRuntime.AppConfig.Email = value;
                 RaisePropertyChanged(LoginEmailPropertyName);
             }
         }
@@ -82,18 +82,18 @@ namespace DDnsPod.Monitor.ViewModels
         {
             get
             {
-                return DDNSPodRuntime.AppConfig.Password;
+                return DDnsSharpRuntime.AppConfig.Password;
             }
 
             set
             {
-                if (DDNSPodRuntime.AppConfig.Password == value)
+                if (DDnsSharpRuntime.AppConfig.Password == value)
                 {
                     return;
                 }
 
                 RaisePropertyChanging(PasswordPropertyName);
-                DDNSPodRuntime.AppConfig.Password = value;
+                DDnsSharpRuntime.AppConfig.Password = value;
                 RaisePropertyChanged(PasswordPropertyName);
             }
         }
@@ -192,7 +192,7 @@ namespace DDnsPod.Monitor.ViewModels
             if (userInfo.Status.Code == 1)
             {
                 _runtime.UserInfo = userInfo.Info;
-                DDNSPodRuntime.SaveAppConfig();
+                DDnsSharpRuntime.SaveAppConfig();
 
                 var mwin = new DDNSMonitorWindow();
                 mwin.Show();

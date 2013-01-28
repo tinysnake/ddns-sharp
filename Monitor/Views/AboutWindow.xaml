@@ -1,11 +1,11 @@
-﻿<Window x:Class="DDnsPod.Monitor.Views.AboutWindow"
+﻿<Window x:Class="DDnsSharp.Monitor.Views.AboutWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="关于 - DDnsPod" Height="322" Width="366" Icon="/DDnsPod.Monitor;component/Resources/logo.png" ResizeMode="NoResize" SizeToContent="Height" WindowStartupLocation="CenterScreen">
+        Title="关于 - DDnsSharp" Height="322" Width="366" Icon="/DDnsSharp.Monitor;component/Resources/logo.png" ResizeMode="NoResize" SizeToContent="Height" WindowStartupLocation="CenterScreen">
     <StackPanel>
-        <Image Margin="0,5,0,0" Source="/DDnsPod.Monitor;component/Resources/big logo.png" Height="45" />
+        <Image Margin="0,5,0,0" Source="/DDnsSharp.Monitor;component/Resources/big logo.png" Height="45" />
         <Label Name="lb_version" Content="当前版本:" />
-        <Label Content="DDnsPod 是使用 WPF 技术并基于 .Net Framework 4.5 开发." />
+        <Label Content="DDnsSharp 是使用 WPF 技术并基于 .Net Framework 4.5 开发." />
         <StackPanel Margin="5" Orientation="Horizontal">
             <TextBlock Text="开发者: " />
             <TextBlock Name="lb_author" Cursor="Hand" Text="SNAKE" MouseLeftButtonDown="lb_author_MouseLeftButtonDown" TextDecorations="Underline" Foreground="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}" />
@@ -18,7 +18,7 @@
         </StackPanel>
         <Label Content="赞助者的名字将会出现在开源社区的项目首页." />
         <StackPanel Margin="5" Orientation="Horizontal">
-            <TextBlock Text="感谢您使用DDnsPod! " />
+            <TextBlock Text="感谢您使用DDnsSharp! " />
             <TextBlock Name="lb_feedback" Cursor="Hand" Text="提交反馈" MouseLeftButtonDown="lb_feedback_MouseLeftButtonDown" TextDecorations="Underline" Foreground="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}" />
             </StackPanel>
     </StackPanel>

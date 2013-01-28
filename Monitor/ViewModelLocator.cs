@@ -1,7 +1,7 @@
 ﻿/*
   In App.xaml:
   <Application.Resources>
-      <vm:ViewModelLocator xmlns:vm="clr-namespace:DDnsPod.Monitor"
+      <vm:ViewModelLocator xmlns:vm="clr-namespace:DDnsSharp.Monitor"
                                    x:Key="Locator" />
   </Application.Resources>
   
@@ -9,15 +9,15 @@
   DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
 */
 
-using DDnsPod.Monitor.Core;
-using DDnsPod.Monitor.NinjectModules;
-using DDnsPod.Monitor.ViewModels;
+using DDnsSharp.Monitor.Core;
+using DDnsSharp.Monitor.NinjectModules;
+using DDnsSharp.Monitor.ViewModels;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 using Ninject;
 
-namespace DDnsPod.Monitor
+namespace DDnsSharp.Monitor
 {
     /// <summary>
     /// This class contains static references to all the view models in the

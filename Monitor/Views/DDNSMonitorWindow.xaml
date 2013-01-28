@@ -3,11 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:cmd="http://www.galasoft.ch/mvvmlight"
-        xmlns:local="clr-namespace:DDnsPod.Monitor.Core"
-        xmlns:comps="clr-namespace:DDnsPod.Monitor.Components"
-        xmlns:vm="clr-namespace:DDnsPod.Monitor.ViewModels"
-        xmlns:converters="clr-namespace:DDnsPod.Monitor.Converters" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" mc:Ignorable="d" x:Class="DDnsPod.Monitor.Views.DDNSMonitorWindow"
-        Title="DDnsPod" Height="480" Width="640" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Icon="/DDnsPod.Monitor;component/Resources/logo.png">
+        xmlns:local="clr-namespace:DDnsSharp.Monitor.Core"
+        xmlns:comps="clr-namespace:DDnsSharp.Monitor.Components"
+        xmlns:vm="clr-namespace:DDnsSharp.Monitor.ViewModels"
+        xmlns:converters="clr-namespace:DDnsSharp.Monitor.Converters" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" mc:Ignorable="d" x:Class="DDnsSharp.Monitor.Views.DDNSMonitorWindow"
+        Title="DDnsSharp" Height="480" Width="640" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Icon="/DDnsSharp.Monitor;component/Resources/logo.png">
 	<Window.Resources>
 		<converters:ServiceStatusVisibilityConverter x:Key="ServiceStatusVisibilityConverter"/>
 	</Window.Resources>
@@ -30,7 +30,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Image Grid.Column="0" Source="/DDnsPod.Monitor;component/Resources/big logo.png" Height="45" />
+                <Image Grid.Column="0" Source="/DDnsSharp.Monitor;component/Resources/big logo.png" Height="45" />
                 <StackPanel Grid.Column="1" Margin="0,2" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Label Content="{Binding Runtime.UserInfo.Model.Name}" VerticalAlignment="Center" Margin="10,0"/>
                     <TextBlock Text="注销账号" Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" TextDecorations="Underline"  VerticalAlignment="Center" Height="15.24" Margin="10,0,2,0" Cursor="Hand">

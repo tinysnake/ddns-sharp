@@ -1,12 +1,12 @@
-﻿using DDnsPod.Monitor.Core;
-using DDnsPod.Monitor.ViewModels;
+﻿using DDnsSharp.Monitor.Core;
+using DDnsSharp.Monitor.ViewModels;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows;
 using System.Windows.Forms;
 
-namespace DDnsPod.Monitor.Views
+namespace DDnsSharp.Monitor.Views
 {
     /// <summary>
     /// Interaction logic for DDNSMonitor.xaml
@@ -84,7 +84,7 @@ namespace DDnsPod.Monitor.Views
                     serviceStr = "服务状态未知.";
                     break;
             }
-            notifyIcon.Text = "DDnsPod: " + serviceStr + "\r\n双击打开或隐藏界面.";
+            notifyIcon.Text = "DDnsSharp: " + serviceStr + "\r\n双击打开或隐藏界面.";
         }
 
         private DDNSMonitorWindowViewModel vm;

@@ -1,10 +1,10 @@
-﻿using DDnsPod.Core;
-using DDnsPod.Core.Models;
-using DDnsPod.Core.Services;
-using DDnsPod.Monitor.Core;
-using DDnsPod.Monitor.Design;
-using DDnsPod.Monitor.Models;
-using DDnsPod.Monitor.Views;
+﻿using DDnsSharp.Core;
+using DDnsSharp.Core.Models;
+using DDnsSharp.Core.Services;
+using DDnsSharp.Monitor.Core;
+using DDnsSharp.Monitor.Design;
+using DDnsSharp.Monitor.Models;
+using DDnsSharp.Monitor.Views;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Monitor;
@@ -17,7 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace DDnsPod.Monitor.ViewModels
+namespace DDnsSharp.Monitor.ViewModels
 {
     public class RecordManageWindowViewModel : ViewModelBase
     {

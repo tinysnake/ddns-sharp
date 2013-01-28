@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace DDnsPod.Monitor.Converters
+namespace DDnsSharp.Monitor.Converters
 {
     public class BoolToVisibilityConverter:IValueConverter
     {

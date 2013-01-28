@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 
-namespace DDnsPod.Monitor.Views
+namespace DDnsSharp.Monitor.Views
 {
     /// <summary>
     /// Interaction logic for AboutWindow.xaml
@@ -28,7 +28,7 @@ namespace DDnsPod.Monitor.Views
             var serviceFullName = String.Empty;
             try
             {
-                serviceFullName = Assembly.LoadFile(Path.Combine(Directory.GetCurrentDirectory(), "DDnsPod.Service.exe")).FullName;
+                serviceFullName = Assembly.LoadFile(Path.Combine(Directory.GetCurrentDirectory(), "DDnsSharp.Service.exe")).FullName;
             }
             catch { }
             var svcAsmMatch = regex.Match(serviceFullName);
@@ -45,7 +45,7 @@ namespace DDnsPod.Monitor.Views
 
         private void lb_git_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Process.Start("https://gitcafe.com/snake/DDnsPod");
+            Process.Start("https://gitcafe.com/snake/DDnsSharp");
         }
 
         private void lb_donate_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -55,7 +55,7 @@ namespace DDnsPod.Monitor.Views
 
         private void lb_feedback_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Process.Start("https://gitcafe.com/snake/DDnsPod/tickets");
+            Process.Start("https://gitcafe.com/snake/DDnsSharp/tickets");
         }
     }
 }

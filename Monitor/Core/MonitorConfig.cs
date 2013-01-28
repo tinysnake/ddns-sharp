@@ -1,4 +1,4 @@
-﻿using DDnsPod.Monitor.ViewModels;
+﻿using DDnsSharp.Monitor.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DDnsPod.Monitor.Core
+namespace DDnsSharp.Monitor.Core
 {
     public class MonitorConfig
     {

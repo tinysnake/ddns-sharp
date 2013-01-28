@@ -1,4 +1,4 @@
-﻿using DDnsPod.Core.Models;
+﻿using DDnsSharp.Core.Models;
 using GalaSoft.MvvmLight;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DDnsPod.Monitor.Models
+namespace DDnsSharp.Monitor.Models
 {
     public class UpdateModelWrapper:ObservableObject
     {

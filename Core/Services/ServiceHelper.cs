@@ -1,4 +1,4 @@
-﻿using DDnsPod.Core.Models;
+﻿using DDnsSharp.Core.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DDnsPod.Core.Services
+namespace DDnsSharp.Core.Services
 {
     public class ServiceHelper
     {

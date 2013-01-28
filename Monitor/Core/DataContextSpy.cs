@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace DDnsPod.Monitor.Core
+namespace DDnsSharp.Monitor.Core
 {
     public class DataContextSpy
     : Freezable // Enable ElementName and DataContext bindings

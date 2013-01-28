@@ -7,8 +7,8 @@
     <ProjectGuid>{03E9A383-541D-4570-AB0A-D0DB8D0F2255}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DDnsPod.Service</RootNamespace>
-    <AssemblyName>DDnsPod.Service</AssemblyName>
+    <RootNamespace>DDnsSharp.Service</RootNamespace>
+    <AssemblyName>DDnsSharp.Service</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>

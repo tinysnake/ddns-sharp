@@ -1,4 +1,4 @@
-﻿using DDnsPod.Core;
+﻿using DDnsSharp.Core;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace DDnsPod.Service
+namespace DDnsSharp.Service
 {
     partial class DDNSPodService : ServiceBase
     {
@@ -39,11 +39,11 @@ namespace DDnsPod.Service
             logger = LogManager.GetCurrentClassLogger();
             try
             {
-                DDNSPodRuntime.LoadAppConfig();
+                DDnsSharpRuntime.LoadAppConfig();
             }
             catch (IOException)
             {
-                logger.Fatal("无法获取到DDnsPod配置,服务停止.");
+                logger.Fatal("无法获取到DDnsSharp配置,服务停止.");
                 this.Stop();
                 return;
             }
@@ -67,7 +67,8 @@ namespace DDnsPod.Service
 
         private async void OnJob()
         {
-            await DDNS.Start(DDNSPodRuntime.AppConfig.UpdateList);
+            await DDNS.Start(DDnsSharpRuntime.AppConfig.UpdateList);
+            DDnsSharpRuntime.SaveAppConfig();
         }
     }
 }

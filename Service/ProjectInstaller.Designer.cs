@@ -1,4 +1,4 @@
-﻿namespace DDnsPod.Service
+﻿namespace DDnsSharp.Service
 {
     partial class ProjectInstaller
     {

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ninject.Modules;
-using DDnsPod.Monitor.ViewModels;
-using DDnsPod.Core.Models;
-using DDnsPod.Monitor.Design;
-using DDnsPod.Monitor.Models;
+using DDnsSharp.Monitor.ViewModels;
+using DDnsSharp.Core.Models;
+using DDnsSharp.Monitor.Design;
+using DDnsSharp.Monitor.Models;
 
-namespace DDnsPod.Monitor.NinjectModules
+namespace DDnsSharp.Monitor.NinjectModules
 {
     public class DesigntimeNinjectModule:NinjectModule
     {

@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 using System.Diagnostics;
 using System.IO;
 
-namespace DDnsPod.Core.Utils
+namespace DDnsSharp.Core.Utils
 {
     public class Encryption
     {

@@ -1,4 +1,4 @@
-﻿using DDnsPod.Monitor.Models;
+﻿using DDnsSharp.Monitor.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DDnsPod.Monitor.Components
+namespace DDnsSharp.Monitor.Components
 {
     /// <summary>
     /// Interaction logic for UpdateModelControl.xaml

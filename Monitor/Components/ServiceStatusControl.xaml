@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:converters="clr-namespace:DDnsPod.Monitor.Converters"
-             xmlns:local="clr-namespace:DDnsPod.Monitor.Components"
-             x:Class="DDnsPod.Monitor.Components.ServiceStatusControl" 
+             xmlns:converters="clr-namespace:DDnsSharp.Monitor.Converters"
+             xmlns:local="clr-namespace:DDnsSharp.Monitor.Components"
+             x:Class="DDnsSharp.Monitor.Components.ServiceStatusControl" 
              mc:Ignorable="d" 
              d:DesignHeight="64" d:DesignWidth="16">
     <UserControl.Resources>

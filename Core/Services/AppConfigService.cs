@@ -1,5 +1,5 @@
-﻿using DDnsPod.Core.Models;
-using DDnsPod.Core.Utils;
+﻿using DDnsSharp.Core.Models;
+using DDnsSharp.Core.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NLog;
 
-namespace DDnsPod.Core.Services
+namespace DDnsSharp.Core.Services
 {
     public class AppConfigService
     {

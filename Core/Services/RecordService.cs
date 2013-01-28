@@ -1,11 +1,11 @@
-﻿using DDnsPod.Core.Models;
+﻿using DDnsSharp.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DDnsPod.Core.Services
+namespace DDnsSharp.Core.Services
 {
     public static class RecordService
     {
@@ -13,7 +13,7 @@ namespace DDnsPod.Core.Services
 
         public static async Task<RecordChangedReturnValue> UpdateDDNS(int domainID, int recordID, string subDomain, string line)
         {
-            var model = DDNSPodRuntime.NewRequestModel<UpdateDDNSRequestModel>();
+            var model = DDnsSharpRuntime.NewRequestModel<UpdateDDNSRequestModel>();
             model.DomainID = domainID;
             model.RecordID = recordID;
             model.SubDomain = subDomain;
@@ -23,7 +23,7 @@ namespace DDnsPod.Core.Services
 
         public static async Task<RecordListReturnValue> GetList(int domainID, string subDomain = null)
         {
-            var m = DDNSPodRuntime.NewRequestModel<RecordListRequestModel>();
+            var m = DDnsSharpRuntime.NewRequestModel<RecordListRequestModel>();
             m.DomainID = domainID;
             m.SubDomain = subDomain;
             return await ServiceHelper.AccessAPI<RecordListReturnValue>(SERVICE_NAME, "List", m);
@@ -34,7 +34,7 @@ namespace DDnsPod.Core.Services
         {
             if (ttl < 1 || ttl > 604800)
                 ttl = 600;
-            var m = DDNSPodRuntime.NewRequestModel<CreateRecordRequestModel>();
+            var m = DDnsSharpRuntime.NewRequestModel<CreateRecordRequestModel>();
             m.DomainID = domainID;
             m.SubDomain = subDomain;
             m.RecordType = recordType;

@@ -5,9 +5,9 @@
     xmlns:cmd="http://www.galasoft.ch/mvvmlight"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    xmlns:local="clr-namespace:DDnsPod.Monitor.Components"
-    xmlns:Converters="clr-namespace:DDnsPod.Monitor.Converters" 
-    x:Class="DDnsPod.Monitor.Components.UpdateModelControl"
+    xmlns:local="clr-namespace:DDnsSharp.Monitor.Components"
+    xmlns:Converters="clr-namespace:DDnsSharp.Monitor.Converters" 
+    x:Class="DDnsSharp.Monitor.Components.UpdateModelControl"
     mc:Ignorable="d">
     <UserControl.Resources>
         <Converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>

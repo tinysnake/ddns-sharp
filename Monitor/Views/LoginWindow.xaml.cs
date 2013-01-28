@@ -1,4 +1,4 @@
-﻿using DDnsPod.Core;
+﻿using DDnsSharp.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace DDnsPod.Monitor.Views
+namespace DDnsSharp.Monitor.Views
 {
     /// <summary>
     /// Interaction logic for LoginWindow.xaml
@@ -27,7 +27,7 @@ namespace DDnsPod.Monitor.Views
 
         private void PasswordBox_PasswordChanged_1(object sender, RoutedEventArgs e)
         {
-            DDNSPodRuntime.AppConfig.Password = pwdbox_pwd.Password;
+            DDnsSharpRuntime.AppConfig.Password = pwdbox_pwd.Password;
         }
     }
 }

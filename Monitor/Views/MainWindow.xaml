@@ -1,7 +1,7 @@
-﻿<Window x:Class="DDnsPod.Monitor.Views.MainWindow"
+﻿<Window x:Class="DDnsSharp.Monitor.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-        Height="60" Width="250" Title="正在登陆 - DDnsPod" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None" Icon="/DDnsPod.Monitor;component/Resources/logo.png">
+        Height="60" Width="250" Title="正在登陆 - DDnsSharp" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None" Icon="/DDnsSharp.Monitor;component/Resources/logo.png">
     <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1">
         <StackPanel VerticalAlignment="Center" Margin="5,0">
             <Label HorizontalAlignment="Center" Content="正在登陆" VerticalAlignment="Top"/>

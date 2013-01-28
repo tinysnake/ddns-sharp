@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DDnsPod.Core.Services;
-using DDnsPod.Core.Models;
+using DDnsSharp.Core.Services;
+using DDnsSharp.Core.Models;
 using NLog;
 using System.Net;
 
-namespace DDnsPod.Core
+namespace DDnsSharp.Core
 {
     public static class DDNS
     {

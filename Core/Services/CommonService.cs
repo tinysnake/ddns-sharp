@@ -1,4 +1,4 @@
-﻿using DDnsPod.Core.Models;
+﻿using DDnsSharp.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,20 +6,20 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace DDnsPod.Core.Services
+namespace DDnsSharp.Core.Services
 {
     public static class CommonService
     {
         public static async Task<ReturnValueBase> GetAPIVersion()
         {
-            var requestModel = DDNSPodRuntime.NewRequestModel<RequestModelBase>();
+            var requestModel = DDnsSharpRuntime.NewRequestModel<RequestModelBase>();
             var url = ServiceHelper.BuildAPIUrl("Info", "Version");
             return await ServiceHelper.AccessAPI<ReturnValueBase>(url, requestModel);
         }
 
         public static async Task<UserInfoReturnValue> GetUserInfo()
         {
-            var requestModel = DDNSPodRuntime.NewRequestModel<RequestModelBase>();
+            var requestModel = DDnsSharpRuntime.NewRequestModel<RequestModelBase>();
             var url = ServiceHelper.BuildAPIUrl("User", "Detail");
             return await ServiceHelper.AccessAPI<UserInfoReturnValue>(url, requestModel);
         }

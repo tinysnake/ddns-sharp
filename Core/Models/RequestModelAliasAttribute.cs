@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DDnsPod.Core.Models
+namespace DDnsSharp.Core.Models
 {
     public class RequestModelAliasAttribute : Attribute
     {

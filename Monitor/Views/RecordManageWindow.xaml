@@ -4,8 +4,8 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:cmd="http://www.galasoft.ch/mvvmlight"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:Converters="clr-namespace:DDnsPod.Monitor.Converters" mc:Ignorable="d" x:Class="DDnsPod.Monitor.Views.RecordManageWindow"
-        Title="管理记录 - DDnsPod" Height="219" Width="233" Icon="/DDnsPod.Monitor;component/Resources/logo.png" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" SizeToContent="Height">
+        xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:Converters="clr-namespace:DDnsSharp.Monitor.Converters" mc:Ignorable="d" x:Class="DDnsSharp.Monitor.Views.RecordManageWindow"
+        Title="管理记录 - DDnsSharp" Height="219" Width="233" Icon="/DDnsSharp.Monitor;component/Resources/logo.png" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" SizeToContent="Height">
 	<Window.Resources>
 		<Converters:ReverseBooleanConverter x:Key="ReverseBooleanConverter"/>
 	</Window.Resources>

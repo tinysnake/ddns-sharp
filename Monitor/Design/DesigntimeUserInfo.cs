@@ -1,11 +1,11 @@
-﻿using DDnsPod.Core.Models;
+﻿using DDnsSharp.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DDnsPod.Monitor.Design
+namespace DDnsSharp.Monitor.Design
 {
     public class DesigntimeUserInfo:UserInfo
     {

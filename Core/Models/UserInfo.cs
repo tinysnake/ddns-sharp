@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DDnsPod.Core.Models
+namespace DDnsSharp.Core.Models
 {
     public class UserInfo
     {

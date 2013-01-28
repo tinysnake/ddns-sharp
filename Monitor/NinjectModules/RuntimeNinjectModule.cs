@@ -1,6 +1,6 @@
-﻿using DDnsPod.Monitor.Core;
-using DDnsPod.Monitor.Models;
-using DDnsPod.Monitor.ViewModels;
+﻿using DDnsSharp.Monitor.Core;
+using DDnsSharp.Monitor.Models;
+using DDnsSharp.Monitor.ViewModels;
 using Ninject.Modules;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DDnsPod.Monitor.NinjectModules
+namespace DDnsSharp.Monitor.NinjectModules
 {
     class RuntimeNinjectModule:NinjectModule
     {

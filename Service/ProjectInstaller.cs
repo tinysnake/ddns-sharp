@@ -9,7 +9,7 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Threading.Tasks;
 
-namespace DDnsPod.Service
+namespace DDnsSharp.Service
 {
     [RunInstaller(true)]
     public partial class ProjectInstaller : System.Configuration.Install.Installer
