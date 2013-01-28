@@ -1,1 +1,1 @@
-InstallUtil /u DDnsPod.Service.exe
+InstallUtil /u DDnsSharp.Service.exe
