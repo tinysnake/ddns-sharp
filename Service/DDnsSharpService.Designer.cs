@@ -1,6 +1,6 @@
 ﻿namespace DDnsSharp.Service
 {
-    partial class DDNSPodService
+    partial class DDnsSharpService
     {
         /// <summary> 
         /// Required designer variable.

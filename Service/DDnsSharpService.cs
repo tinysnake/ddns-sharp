@@ -15,9 +15,9 @@ using System.Timers;
 
 namespace DDnsSharp.Service
 {
-    partial class DDNSPodService : ServiceBase
+    partial class DDnsSharpService : ServiceBase
     {
-        public DDNSPodService()
+        public DDnsSharpService()
         {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             InitializeComponent();

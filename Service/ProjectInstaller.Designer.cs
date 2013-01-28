@@ -40,8 +40,8 @@
             // serviceInstaller1
             // 
             this.serviceInstaller1.Description = "利用dnspod的开放API制作的ddns服务";
-            this.serviceInstaller1.DisplayName = "DDNSPodService";
-            this.serviceInstaller1.ServiceName = "DDNSPodService";
+            this.serviceInstaller1.DisplayName = "DDnsSharpService";
+            this.serviceInstaller1.ServiceName = "DDnsSharpService";
             this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller

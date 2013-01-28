@@ -311,7 +311,7 @@ namespace DDnsSharp.Monitor.ViewModels
                     ?? (_chkoutLogCommand = new RelayCommand(() =>
                 {
                     System.Diagnostics.Process.Start("notepad",
-                        Path.Combine(Directory.GetCurrentDirectory(), "ddnspod.info"));
+                        Path.Combine(Directory.GetCurrentDirectory(), "ddnssharp.info"));
                 }));
             }
         }

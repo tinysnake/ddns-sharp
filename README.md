@@ -2,13 +2,13 @@
 
 #### 本软件需要Microsft .NET Framework 4.5 才能运行.
 
-当前推荐下载地址: [百度云网盘](http://pan.baidu.com/share/link?shareid=231761&uk=1040525562)
+当前推荐下载地址: [百度云网盘](http://pan.baidu.com/share/link?shareid=231766&uk=1040525562)
 
 .NET4.5框架下载地址: [在线安装包](http://go.microsoft.com/fwlink/?LinkId=225704), [离线安装包](http://go.microsoft.com/fwlink/?LinkId=225702)
 
 当前管理器版本号: `0.1.4777`
 
-当前服务版本号: `0.1.4776`
+当前服务版本号: `0.1.4777`
 
 ## DDnsSharp简介
 

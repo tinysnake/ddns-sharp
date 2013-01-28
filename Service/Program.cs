@@ -18,7 +18,7 @@ namespace Service
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[] 
             { 
-                new DDNSPodService()
+                new DDnsSharpService()
             };
             ServiceBase.Run(ServicesToRun);
         }

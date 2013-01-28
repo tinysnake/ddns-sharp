@@ -75,11 +75,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DDNSPodService.cs">
+    <Compile Include="DDnsSharpService.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="DDNSPodService.Designer.cs">
-      <DependentUpon>DDNSPodService.cs</DependentUpon>
+    <Compile Include="DDnsSharpService.Designer.cs">
+      <DependentUpon>DDnsSharpService.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">
