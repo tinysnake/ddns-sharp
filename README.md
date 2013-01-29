@@ -6,7 +6,7 @@
 
 .NET4.5框架下载地址: [在线安装包](http://go.microsoft.com/fwlink/?LinkId=225704), [离线安装包](http://go.microsoft.com/fwlink/?LinkId=225702)
 
-当前管理器版本号: `0.1.4778
+当前管理器版本号: `0.1.4778`
 
 当前服务版本号: `0.1.4777`
 
