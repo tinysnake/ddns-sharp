@@ -7,7 +7,7 @@
         xmlns:comps="clr-namespace:DDnsSharp.Monitor.Components"
         xmlns:vm="clr-namespace:DDnsSharp.Monitor.ViewModels"
         xmlns:converters="clr-namespace:DDnsSharp.Monitor.Converters" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" mc:Ignorable="d" x:Class="DDnsSharp.Monitor.Views.DDNSMonitorWindow"
-        Title="DDnsSharp" Height="480" Width="640" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Icon="/DDnsSharp.Monitor;component/Resources/logo.png">
+        Title="DDnsSharp" Height="480" Width="640" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Icon="/DDnsSharp.Monitor;component/Resources/logo.png">
 	<Window.Resources>
 		<converters:ServiceStatusVisibilityConverter x:Key="ServiceStatusVisibilityConverter"/>
 	</Window.Resources>
@@ -37,13 +37,6 @@
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeftButtonDown">
         						<cmd:EventToCommand CommandParameter="{Binding}" Command="{Binding LogoutCommand, Mode=OneWay}"/>
-        					</i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </TextBlock>
-                    <TextBlock Text="关闭软件" Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" TextDecorations="Underline"  VerticalAlignment="Center" Height="15.24" Margin="2,0,0,0" Cursor="Hand">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseLeftButtonDown">
-        						<cmd:EventToCommand CommandParameter="{Binding}" Command="{Binding ExitCommand, Mode=OneWay}"/>
         					</i:EventTrigger>
                         </i:Interaction.Triggers>
                     </TextBlock>

@@ -8,6 +8,7 @@ using System.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Windows;
+using Ninject;
 
 namespace DDnsSharp.Monitor.ViewModels
 {
@@ -26,9 +27,11 @@ namespace DDnsSharp.Monitor.ViewModels
         {
             rk = Registry.CurrentUser.OpenSubKey
             ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            mconfig = MonitorIoc.Current.Get<MonitorConfig>();
         }
 
         private RegistryKey rk;
+        private MonitorConfig mconfig;
 
         #region INPC
         /// <summary>
@@ -75,7 +78,7 @@ namespace DDnsSharp.Monitor.ViewModels
         {
             get
             {
-                return MonitorConfig.HideOnStartup;
+                return mconfig.HideOnStartup;
             }
 
             set
@@ -85,7 +88,7 @@ namespace DDnsSharp.Monitor.ViewModels
                     return;
                 }
                 RaisePropertyChanging(MonitorConfig.HideOnStartupPropertyName);
-                MonitorConfig.HideOnStartup = value;
+                mconfig.HideOnStartup = value;
                 RaisePropertyChanged(MonitorConfig.HideOnStartupPropertyName);
             }
         }

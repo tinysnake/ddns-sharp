@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows;
-using System.Windows.Forms;
+using Ninject;
+using DDnsSharp.Monitor.Components;
+using DDnsSharp.Monitor.Utils;
 
 namespace DDnsSharp.Monitor.Views
 {
@@ -17,47 +19,55 @@ namespace DDnsSharp.Monitor.Views
         {
             InitializeComponent();
 
+            mconfig = MonitorIoc.Current.Get<MonitorConfig>();
             vm = DataContext as DDNSMonitorWindowViewModel;
-            vm.PropertyChanged += vm_PropertyChanged;
 
-            string iconPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources");
-            iconDict = new Dictionary<ServiceStatus, Icon>();
-            iconDict.Add(ServiceStatus.NotExist, new System.Drawing.Icon(Path.Combine(iconPath, "stop.ico")));
-            iconDict.Add(ServiceStatus.UnKnown, new System.Drawing.Icon(Path.Combine(iconPath, "warning.ico")));
-            iconDict.Add(ServiceStatus.Stopped, new System.Drawing.Icon(Path.Combine(iconPath, "red_light.ico")));
-            iconDict.Add(ServiceStatus.Running, new System.Drawing.Icon(Path.Combine(iconPath, "green_light.ico")));
-
-            notifyIcon = new NotifyIcon();
-            notifyIcon.DoubleClick += notifyIcon_DoubleClick;
+            DDnsSharpTray.Init();
+            var notifyIcon = DDnsSharpTray.Current;
             RefreshIconState();
             notifyIcon.Visible = true;
+            vm.PropertyChanged += vm_PropertyChanged;
 
-            this.Closing += (o, e) =>
-            {
-                this.Hide();
-                e.Cancel = true;
-            };
+            this.StateChanged += DDNSMonitorWindow_StateChanged;
+            this.Closing += DDNSMonitorWindow_Closing;
+            this.Closed += (o, e) => vm.Cleanup();
         }
 
-        void notifyIcon_DoubleClick(object sender, System.EventArgs e)
+        private MonitorConfig mconfig;
+        private DDNSMonitorWindowViewModel vm;
+        /// <summary>
+        /// 如果为false则是用户单击关闭按钮,就弹出窗口提示用户关闭行为,否则直接关闭本窗口
+        /// </summary>
+        private bool isClosingBySystem;
+
+        public void Close(bool force)
         {
-            if (this.Visibility == Visibility.Visible)
+            if (force)
+                isClosingBySystem = true;
+            this.Close();
+        }
+
+        private void DDNSMonitorWindow_StateChanged(object sender, System.EventArgs e)
+        {
+            if (this.WindowState == WindowState.Minimized)
             {
-                var wins = System.Windows.Application.Current.Windows;
-                foreach (Window win in wins)
-                {
-                    if (win != this)
-                        win.Close();
-                }
-                this.Hide();
-            }
-            else
-            {
-                this.Show();
+                btn_hide_Click(this, null);
             }
         }
 
-        void vm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void DDNSMonitorWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!isClosingBySystem)
+            {
+                var result = MessageBox.Show("您确定要关闭DDnsSharp吗?","提示",MessageBoxButton.YesNo);
+                if (result == MessageBoxResult.No)
+                    e.Cancel = true;
+                else
+                    DDnsSharpHelpers.ExitApp();
+            }
+        }
+
+        private void vm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == DDNSMonitorWindowViewModel.ServiceStatusPropertyName)
             {
@@ -67,7 +77,7 @@ namespace DDnsSharp.Monitor.Views
 
         private void RefreshIconState()
         {
-            notifyIcon.Icon = iconDict[vm.ServiceStatus];
+            DDnsSharpTray.SetStatus(vm.ServiceStatus);
             string serviceStr;
             switch (vm.ServiceStatus)
             {
@@ -84,21 +94,12 @@ namespace DDnsSharp.Monitor.Views
                     serviceStr = "服务状态未知.";
                     break;
             }
-            notifyIcon.Text = "DDnsSharp: " + serviceStr + "\r\n双击打开或隐藏界面.";
+            DDnsSharpTray.Current.Text = "DDnsSharp: " + serviceStr + "\r\n双击打开或隐藏界面.";
         }
-
-        private DDNSMonitorWindowViewModel vm;
-        private Dictionary<ServiceStatus, Icon> iconDict;
-        private NotifyIcon notifyIcon;
 
         private void btn_hide_Click(object sender, RoutedEventArgs e)
         {
-            this.Hide();
-        }
-
-        public void Dispose()
-        {
-            notifyIcon.Dispose();
+            DDnsSharpHelpers.HideOnTray();
         }
     }
 }

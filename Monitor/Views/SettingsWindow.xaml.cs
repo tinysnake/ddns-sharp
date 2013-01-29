@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,7 @@ namespace DDnsSharp.Monitor.Views
         public SettingsWindow()
         {
             InitializeComponent();
+            this.Closed += (o, e) => (DataContext as ViewModelBase).Cleanup();
         }
 
         private void btn_Ok_Click(object sender, RoutedEventArgs e)

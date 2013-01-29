@@ -17,6 +17,7 @@ namespace DDnsSharp.Monitor.NinjectModules
             Bind<MonitorRuntime>().ToSelf().InSingletonScope();
             Bind<TempStorage>().ToSelf().InSingletonScope();
             Bind<DomainsCache>().ToSelf().InSingletonScope();
+            Bind<MonitorConfig>().ToSelf().InSingletonScope();
 
             Bind<LoginWindowViewModel>().ToSelf();
             Bind<DDNSMonitorWindowViewModel>().ToSelf();

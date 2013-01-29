@@ -1,4 +1,5 @@
 ﻿using DDnsSharp.Core;
+using GalaSoft.MvvmLight;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace DDnsSharp.Monitor.Views
         public LoginWindow()
         {
             InitializeComponent();
+            this.Closed += (o, e) => (DataContext as ViewModelBase).Cleanup();
         }
 
         private void PasswordBox_PasswordChanged_1(object sender, RoutedEventArgs e)

@@ -79,7 +79,7 @@ namespace DDnsSharp.Monitor
         }
 
         /// <summary>
-        /// Gets the RecordManageWindowViewModel property.
+        /// Gets the SettingsWindowViewModel property.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
             "CA1822:MarkMembersAsStatic",

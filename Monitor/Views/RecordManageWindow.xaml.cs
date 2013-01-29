@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace DDnsSharp.Monitor.Views
         public RecordManageWindow()
         {
             InitializeComponent();
+            this.Closed += (o, e) => (DataContext as ViewModelBase).Cleanup();
         }
     }
 }

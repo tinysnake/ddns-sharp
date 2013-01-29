@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DDnsSharp.Monitor.Core
+namespace DDnsSharp.Monitor.Utils
 {
     public class TimerDispatch
     {

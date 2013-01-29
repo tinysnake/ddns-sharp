@@ -2,6 +2,7 @@
 using DDnsSharp.Core.Services;
 using DDnsSharp.Monitor.Core;
 using DDnsSharp.Monitor.Models;
+using DDnsSharp.Monitor.Utils;
 using DDnsSharp.Monitor.Views;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -37,7 +38,7 @@ namespace DDnsSharp.Monitor.ViewModels
             Runtime.SetUpdateList(DDnsSharpRuntime.AppConfig.UpdateList);
             service = ServiceControl.GetService();
             GetServiceStatus();
-            serviceStatusCheker = TimerDispatch.Current.AddInterval((m)=>GetServiceStatus(),5000);
+            serviceStatusCheker = TimerDispatch.Current.AddInterval((m) => GetServiceStatus(), 5000);
             updateListRefresher = TimerDispatch.Current.AddInterval((m) => RefreshUpdateList(), 15000);
             UpdateCurrentIP();
         }
@@ -134,14 +135,9 @@ namespace DDnsSharp.Monitor.ViewModels
                 return _logoutCommand
                     ?? (_logoutCommand = new RelayCommand(() =>
                 {
-
                     var loginWin = new LoginWindow();
                     loginWin.Show();
-                    foreach (Window win in App.Current.Windows)
-                    {
-                        if (win != loginWin)
-                            win.Close();
-                    }
+                    DDnsSharpHelpers.CloseAllWindowsBut(new[] { loginWin });
                 }));
             }
         }
@@ -164,7 +160,7 @@ namespace DDnsSharp.Monitor.ViewModels
                     um.Enabled = true;
 
                     DDnsSharpRuntime.AppConfig.UpdateList = (from w in Runtime.UpdateList
-                                                           select w.UnWrap()).ToList();
+                                                             select w.UnWrap()).ToList();
                     DDnsSharpRuntime.SaveAppConfig();
                 }));
             }
@@ -188,7 +184,7 @@ namespace DDnsSharp.Monitor.ViewModels
                     um.Enabled = false;
 
                     DDnsSharpRuntime.AppConfig.UpdateList = (from w in Runtime.UpdateList
-                                                           select w.UnWrap()).ToList();
+                                                             select w.UnWrap()).ToList();
                     DDnsSharpRuntime.SaveAppConfig();
                 }));
             }
@@ -248,34 +244,6 @@ namespace DDnsSharp.Monitor.ViewModels
                 {
                     var win = new RecordManageWindow();
                     win.ShowDialog();
-                }));
-            }
-        }
-        #endregion
-
-        #region ExitCommand
-        private RelayCommand _exitCommand;
-
-        /// <summary>
-        /// Gets the ExitCommand.
-        /// </summary>
-        public RelayCommand ExitCommand
-        {
-            get
-            {
-                return _exitCommand
-                    ?? (_exitCommand = new RelayCommand(() =>
-                {
-                    var wins = Application.Current.Windows;
-                    foreach (Window win in wins)
-                    {
-                        if (win is DDNSMonitorWindow)
-                        {
-                            (win as DDNSMonitorWindow).Dispose();
-                        }
-                        win.Close();
-                    }
-                    Environment.Exit(0);
                 }));
             }
         }
@@ -381,7 +349,7 @@ namespace DDnsSharp.Monitor.ViewModels
             }
 
             DDnsSharpRuntime.AppConfig.UpdateList = (from w in Runtime.UpdateList
-                                                   select w.UnWrap()).ToList();
+                                                     select w.UnWrap()).ToList();
             DDnsSharpRuntime.SaveAppConfig();
         }
 
@@ -393,7 +361,7 @@ namespace DDnsSharp.Monitor.ViewModels
                 Runtime.UpdateList.Remove(um);
 
                 DDnsSharpRuntime.AppConfig.UpdateList = (from w in Runtime.UpdateList
-                                                       select w.UnWrap()).ToList();
+                                                         select w.UnWrap()).ToList();
                 DDnsSharpRuntime.SaveAppConfig();
             }
         }
@@ -405,7 +373,7 @@ namespace DDnsSharp.Monitor.ViewModels
             {
                 await DDNS.Start(updateModels, true);
             }
-            catch(WebException)
+            catch (WebException)
             {
                 MessageBox.Show("无法连接至服务器.");
             }
@@ -539,8 +507,8 @@ namespace DDnsSharp.Monitor.ViewModels
                     {
                         try
                         {
-                            if(service.CanStop)
-                            service.Stop();
+                            if (service.CanStop)
+                                service.Stop();
                         }
                         catch (Exception e)
                         {

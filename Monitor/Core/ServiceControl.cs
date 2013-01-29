@@ -1,5 +1,4 @@
-﻿using DDnsSharp.Service;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceProcess;
@@ -21,7 +20,7 @@ namespace DDnsSharp.Monitor.Core
         public static ServiceController GetService()
         {
             ServiceController[] services = ServiceController.GetServices();
-            var sc = services.FirstOrDefault(_ => _.ServiceName == "DDNSPodService");
+            var sc = services.FirstOrDefault(s => s.ServiceName == "DDnsSharpService");
             return sc;
         }
 

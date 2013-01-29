@@ -61,24 +61,21 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GalaSoft.MvvmLight.Extras.WPF45, Version=4.1.26.28981, Culture=neutral, PublicKeyToken=0e27b6f8be9b2ef7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="GalaSoft.MvvmLight.Extras.WPF45">
       <HintPath>..\packages\MvvmLightLibs.4.1.26.1\lib\net45\GalaSoft.MvvmLight.Extras.WPF45.dll</HintPath>
     </Reference>
-    <Reference Include="GalaSoft.MvvmLight.WPF45, Version=4.1.26.28981, Culture=neutral, PublicKeyToken=eabbf6a5f5af5004, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="GalaSoft.MvvmLight.WPF45">
       <HintPath>..\packages\MvvmLightLibs.4.1.26.1\lib\net45\GalaSoft.MvvmLight.WPF45.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Expression.Drawing" />
     <Reference Include="Microsoft.Expression.Interactions" />
-    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=59d6d24383174ac4, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\packages\MvvmLightLibs.4.1.26.1\lib\net45\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.3.0.1.10\lib\net45-full\Ninject.dll</HintPath>
     </Reference>
-    <Reference Include="NLog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="NLog">
       <HintPath>..\packages\NLog.2.0.0.2000\lib\net40\NLog.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework.Aero2" />
@@ -108,6 +105,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Components\DDnsSharpTray.cs" />
     <Compile Include="Components\ServiceStatusControl.xaml.cs">
       <DependentUpon>ServiceStatusControl.xaml</DependentUpon>
     </Compile>
@@ -119,7 +117,9 @@
     <Compile Include="Core\DataContextSpy.cs" />
     <Compile Include="Core\MonitorConfig.cs" />
     <Compile Include="Core\TempStorage.cs" />
-    <Compile Include="Core\TimerDispatch.cs" />
+    <Compile Include="Utils\ConfigurationHelper.cs" />
+    <Compile Include="Utils\DDnsSharpHelpers.cs" />
+    <Compile Include="Utils\TimerDispatch.cs" />
     <Compile Include="Design\DesigntimeMonitorRuntime.cs" />
     <Compile Include="Design\DesigntimeUpdateModel.cs" />
     <Compile Include="Design\DesigntimeUpdateModelWrapper.cs" />
@@ -136,6 +136,9 @@
     </Compile>
     <Compile Include="Views\DDNSMonitorWindow.xaml.cs">
       <DependentUpon>DDNSMonitorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\KeepAliveWindow.xaml.cs">
+      <DependentUpon>KeepAliveWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RecordManageWindow.xaml.cs">
       <DependentUpon>RecordManageWindow.xaml</DependentUpon>
@@ -156,6 +159,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DDNSMonitorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\KeepAliveWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -226,10 +233,6 @@
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{8f3a7366-79a1-4d4b-854a-a0a2fe3694f7}</Project>
       <Name>Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Service\Service.csproj">
-      <Project>{03e9a383-541d-4570-ab0a-d0db8d0f2255}</Project>
-      <Name>Service</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

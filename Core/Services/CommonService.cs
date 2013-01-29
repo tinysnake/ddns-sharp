@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -24,15 +25,28 @@ namespace DDnsSharp.Core.Services
             return await ServiceHelper.AccessAPI<UserInfoReturnValue>(url, requestModel);
         }
 
+        private static string[] ipurls = new[] { "http://iframe.ip138.com/ic.asp", "http://checkip.dyndns.org/" };
+        private static int urlIndex = 0;
+
         public static async Task<string> GetCurrentIP()
         {
-            var url = "http://checkip.dyndns.org/";
-            var html = await ServiceHelper.AccessAPI(url);
-            var match = Regex.Match(html, "[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}");
-            if (match.Success)
-                return match.Value;
+            var ip = "0.0.0.0";
+            var url = ipurls[urlIndex];
+            urlIndex++;
+            if (urlIndex > ipurls.Length - 1)
+                urlIndex = 0;
 
-            return "0.0.0.0";
+            try
+            {
+                var html = await ServiceHelper.AccessAPI(url);
+                var match = Regex.Match(html, "[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}");
+                if (match.Success)
+                    ip = match.Value;
+            }
+            catch (WebException)
+            { }
+
+            return ip;
         }
     }
 }

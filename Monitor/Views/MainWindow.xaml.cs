@@ -29,6 +29,7 @@ namespace DDnsSharp.Monitor.Views
     {
         public MainWindow()
         {
+            mconfig = MonitorIoc.Current.Get<MonitorConfig>();
             ViewModelLocator.Setup();
             DDnsSharpRuntime.LoadAppConfig();
             var config = DDnsSharpRuntime.AppConfig;
@@ -44,6 +45,8 @@ namespace DDnsSharp.Monitor.Views
             }
         }
 
+        private MonitorConfig mconfig;
+
         private async void Login()
         {
             try
@@ -54,7 +57,7 @@ namespace DDnsSharp.Monitor.Views
                     var runtime = MonitorIoc.Current.Get<MonitorRuntime>();
                     runtime.UserInfo = userInfo.Info;
                     var win = new DDNSMonitorWindow();
-                    if(!MonitorConfig.HideOnStartup)
+                    if (!mconfig.HideOnStartup)
                         win.Show();
                     this.Close();
                 }
