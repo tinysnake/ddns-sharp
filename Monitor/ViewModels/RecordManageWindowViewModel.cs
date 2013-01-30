@@ -33,7 +33,10 @@ namespace DDnsSharp.Monitor.ViewModels
                 TempStorage = MonitorIoc.Current.Get<TempStorage>();
                 record = TempStorage.GetAndRemove<UpdateModelWrapper>(DDNSMonitorWindowViewModel.RECORD_FETCH_KEY);
                 if (record == null)
-                    record = new UpdateModelWrapper();
+                    record = new UpdateModelWrapper()
+                    {
+                        Enabled = true
+                    };
                 if (DomainsCache.DomainInfos.Count() <= 0)
                     RefreshDataCommand.Execute(null);
                 else

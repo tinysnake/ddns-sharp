@@ -1,14 +1,14 @@
-#### DDnsSharp是一个基于dnspod服务,面向个人易用的 Windows 7+ 平台下的 DDNS 软件.
+#### DDnsSharp是一个基于dnspod服务,面向个人易用的 DDNS 软件, 适用于Windows 7, Windows Server 2008 R2 及以上的操作系统.
 
 #### 本软件需要Microsft .NET Framework 4.5 才能运行.
 
-当前推荐下载地址: [百度云网盘](http://pan.baidu.com/share/link?shareid=233389&uk=1040525562)
+当前推荐下载地址: [百度云网盘](http://pan.baidu.com/share/link?shareid=233987&uk=1040525562)
 
 .NET4.5框架下载地址: [在线安装包](http://go.microsoft.com/fwlink/?LinkId=225704), [离线安装包](http://go.microsoft.com/fwlink/?LinkId=225702)
 
 当前管理器版本号: `0.1.4778`
 
-当前服务版本号: `0.1.4777`
+当前服务版本号: `0.1.4778`
 
 ## DDnsSharp简介
 
@@ -74,6 +74,14 @@ A: 我坚决按照dnspod的开发要求所制作的软件,本地保存的密码�
 
 ## Changelogs:
 
-2013/1/30 v0.1.4778.3939
+#### 2013/1/30 Monitor.exe v0.1.4778.3939
 
-修复了无法获取服务器状态的bug,修改了点击关闭按钮却是最小化的用户体验行为.
+- 修复了无法获取服务器状态的bug,修改了点击关闭按钮却是最小化的用户体验行为.
+
+#### 2013/1/30 Monitor.exe v0.1.4778.19870
+
+- 添加新纪录以后记录不再是禁用状态,而是默认启用状态.
+
+#### 2013/1/30 Service.exe v0.1.4778.19870
+
+- 修复了配置不同步导致服务执行同步任务的时候用老配置把新配置覆盖掉的问题.

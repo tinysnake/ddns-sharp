@@ -25,11 +25,6 @@ namespace DDnsSharp.Service
             System.IO.Directory.SetCurrentDirectory(path);
         }
 
-        void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            logger.FatalException("服务出现致命异常.", e.ExceptionObject as Exception);
-        }
-
         private Logger logger;
 
         private Timer timer;
@@ -37,38 +32,44 @@ namespace DDnsSharp.Service
         protected override void OnStart(string[] args)
         {
             logger = LogManager.GetCurrentClassLogger();
-            try
-            {
-                DDnsSharpRuntime.LoadAppConfig();
-            }
-            catch (IOException)
-            {
-                logger.Fatal("无法获取到DDnsSharp配置,服务停止.");
-                this.Stop();
-                return;
-            }
 
             timer = new Timer(30000);
             timer.Elapsed += timer_Elapsed;
             timer.Start();
 
             OnJob();
-
-        }
-
-        void timer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            OnJob();
         }
 
         protected override void OnStop()
         {
+            timer.Stop();
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            logger.FatalException("服务出现致命异常.", e.ExceptionObject as Exception);
+        }
+
+        private void timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            OnJob();
         }
 
         private async void OnJob()
         {
-            await DDNS.Start(DDnsSharpRuntime.AppConfig.UpdateList);
-            DDnsSharpRuntime.SaveAppConfig();
+            try
+            {
+                DDnsSharpRuntime.LoadAppConfig();
+                await DDNS.Start(DDnsSharpRuntime.AppConfig.UpdateList);
+                DDnsSharpRuntime.SaveAppConfig();
+                if (timer.Interval > 30000)
+                    timer.Interval = 30000;
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("更新记录时出现意外错误", ex);
+                timer.Interval = 300000;
+            }
         }
     }
 }
