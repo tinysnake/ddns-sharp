@@ -1,4 +1,4 @@
-#### DDnsSharp是一个基于dnspod服务,面向个人易用的 DDNS 软件, 适用于Windows 7, Windows Server 2008 R2 及以上的操作系统.
+#### DDnsSharp是一个基于[dnspod](https://www.dnspod.cn/)服务,面向个人易用的 DDNS 软件, 适用于Windows 7, Windows Server 2008 R2 及以上的操作系统.
 
 #### 本软件需要Microsft .NET Framework 4.5 才能运行.
 
