@@ -40,6 +40,7 @@ namespace DDnsSharp.Monitor.ViewModels
             GetServiceStatus();
             serviceStatusCheker = TimerDispatch.Current.AddInterval((m) => GetServiceStatus(), 5000);
             updateListRefresher = TimerDispatch.Current.AddInterval((m) => RefreshUpdateList(), 15000);
+            currentIpChecker = TimerDispatch.Current.AddInterval((m) => UpdateCurrentIP(), 180000);
             UpdateCurrentIP();
         }
 
@@ -52,6 +53,7 @@ namespace DDnsSharp.Monitor.ViewModels
         private ServiceController service;
         private TimerModel serviceStatusCheker;
         private TimerModel updateListRefresher;
+        private TimerModel currentIpChecker;
 
         public MonitorRuntime Runtime { get; private set; }
 
@@ -368,6 +370,7 @@ namespace DDnsSharp.Monitor.ViewModels
 
         private async void OnForceUpdate()
         {
+            UpdateCurrentIP();
             var updateModels = from u in Runtime.UpdateList select u.UnWrap();
             try
             {
@@ -542,6 +545,7 @@ namespace DDnsSharp.Monitor.ViewModels
                 service.Dispose();
             TimerDispatch.Current.RemoveTimer(serviceStatusCheker);
             TimerDispatch.Current.RemoveTimer(updateListRefresher);
+            TimerDispatch.Current.RemoveTimer(currentIpChecker);
             base.Cleanup();
         }
 
