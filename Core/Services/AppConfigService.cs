@@ -8,13 +8,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NLog;
+using System.Threading;
 
 namespace DDnsSharp.Core.Services
 {
     public class AppConfigService
     {
+        private const string MUTEX_NAME = "AppConfigService";
         private const string FILE_NAME = "config.txt";
         private static Logger logger = LogManager.GetCurrentClassLogger();
+
+        public AppConfigService()
+        {
+            try
+            {
+                syncMutex = Mutex.OpenExisting(MUTEX_NAME);
+            }
+            catch(WaitHandleCannotBeOpenedException)
+            {
+                syncMutex = new Mutex(false,MUTEX_NAME);
+            }
+        }
+
+        private Mutex syncMutex;
 
         public AppConfig Read()
         {
@@ -23,6 +39,7 @@ namespace DDnsSharp.Core.Services
             AppConfig result = null;
             try
             {
+                syncMutex.WaitOne();
                 FileStream fs;
                 if (File.Exists(fullPath))
                 {
@@ -50,6 +67,7 @@ namespace DDnsSharp.Core.Services
             {
                 if (result == null)
                     result = new AppConfig();
+                syncMutex.ReleaseMutex();
             }
             return result;
         }
@@ -60,6 +78,7 @@ namespace DDnsSharp.Core.Services
             var fullPath = Path.Combine(dir, FILE_NAME);
             try
             {
+                syncMutex.WaitOne();
                 FileStream fs;
                 if (File.Exists(fullPath))
                 {
@@ -84,6 +103,10 @@ namespace DDnsSharp.Core.Services
             catch (IOException ex)
             {
                 logger.ErrorException("AppConfigService.IOException", ex);
+            }
+            finally
+            {
+                syncMutex.ReleaseMutex();
             }
         }
     }
