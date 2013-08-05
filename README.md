@@ -4,11 +4,17 @@
 
 当前推荐下载地址: [百度云网盘](http://pan.baidu.com/share/link?shareid=233987&uk=1040525562)
 
-.NET4.5框架下载地址: [在线安装包](http://go.microsoft.com/fwlink/?LinkId=225704), [离线安装包](http://go.microsoft.com/fwlink/?LinkId=225702)
+[全版本下载地址](http://pan.baidu.com/share/link?shareid=1004940619&uk=1040525562)
 
-当前管理器版本号: `0.1.4778`
+.NET4.5框架下载地址: 
 
-当前服务版本号: `0.1.4778`
+[在线安装包](http://go.microsoft.com/fwlink/?LinkId=225704)
+
+[离线安装包](http://go.microsoft.com/fwlink/?LinkId=225702)
+
+当前管理器版本号: `0.2.4965`
+
+当前服务版本号: `0.2.4965`
 
 ## DDnsSharp简介
 
@@ -16,13 +22,15 @@ DDnsSharp是一个基于dnspod服务,面向个人易用的 Windows 7+ 平台下�
 
 ## DDnsSharp的优势
 
-1. DDnsSharp的天然优势就是它站在了巨人的肩膀上.拥有强大的dnspod系统作为后盾,DDnsSharp能够轻易的击倒通常使用的某壳(免费的某壳服务不支持顶级域名),某3某2网,和远在大洋以外的dyndns服务(距离优势).
+1. DDnsSharp的天然优势就是它站在了巨人的肩膀上.拥有强大的dnspod网作为后盾,DDnsSharp能够轻易的击倒通常使用的某壳(免费的某壳服务不支持顶级域名),某3某2网,和远在大洋以外的dyndns服务(距离优势).
 
 2. 微软的傻瓜化至今为止是做的最好的公司之一,虽然它的运行库安装包比较庞大(40+M),但是只要一路"下一步"到底就能完成安装,点击exe文件就能运行,这样不必为了安装运行环境而伤脑筋了.
 
 3. 服务和管理软件分开运行,每次开机就不用见到烦人的系统托盘图标了..
 
 4. 30秒更新一次,相当于IP一换,立马就同步,某壳免费的三分钟一同步弱爆了!
+
+5. DDnsSharp自己在这大半年的时间都一直在用.稳定性没有问题.
 
 ## DDnsSharp的劣势
 
@@ -73,6 +81,10 @@ A: 我坚决按照dnspod的开发要求所制作的软件,本地保存的密码�
 ![](https://gitcafe.com/snake/DDnsSharp/raw/master/misc/screenshot.jpg)
 
 ## Changelogs:
+
+#### 2013/8/5 Monitor.exe Service.exe 0.2.4965.27053
+
+- 修复了两个进程之间同时对配置文件写入时造成文件内容丢失的问题.
 
 #### 2013/1/30 Monitor.exe v0.1.4778.3939
 
