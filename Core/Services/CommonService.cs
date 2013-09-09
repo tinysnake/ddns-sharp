@@ -11,6 +11,7 @@ namespace DDnsSharp.Core.Services
 {
     public static class CommonService
     {
+        public const string EMPTY_IP = "0.0.0.0";
         public static async Task<ReturnValueBase> GetAPIVersion()
         {
             var requestModel = DDnsSharpRuntime.NewRequestModel<RequestModelBase>();
@@ -30,7 +31,7 @@ namespace DDnsSharp.Core.Services
 
         public static async Task<string> GetCurrentIP()
         {
-            var ip = "0.0.0.0";
+            var ip = EMPTY_IP;
             var url = ipurls[urlIndex];
             urlIndex++;
             if (urlIndex > ipurls.Length - 1)

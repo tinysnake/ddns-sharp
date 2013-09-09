@@ -19,8 +19,8 @@ namespace DDnsSharp.Core
             if (updateModels == null)
                 throw new ArgumentNullException();
 
-            
-            string currentIP;
+
+            string currentIP = CommonService.EMPTY_IP;
             try
             {
                 currentIP = await CommonService.GetCurrentIP();
@@ -28,7 +28,13 @@ namespace DDnsSharp.Core
             catch (WebException)
             {
                 logger.Info("无法连接至服务器.");
-                return String.Empty;
+                return currentIP;
+            }
+
+            if (currentIP == CommonService.EMPTY_IP)
+            {
+                logger.Info("无法获取正确IP.");
+                return currentIP;
             }
 
             foreach (var um in updateModels)
@@ -36,15 +42,12 @@ namespace DDnsSharp.Core
                 if (!um.Enabled)
                     continue;
 
-                if (!forceUpdate)
-                {
-                    if (currentIP == um.LastUpdateIP)
-                        continue;
-                }
+                if (!forceUpdate&&currentIP == um.LastUpdateIP)
+                    continue;
+
                 if (String.IsNullOrEmpty(um.DomainName) || String.IsNullOrEmpty(um.SubDomain))
-                {
-                    logger.Error("发现无效记录.");
-                }
+                    continue;
+
                 if (String.IsNullOrEmpty(um.LineName))
                     um.LineName = "默认";
 
@@ -56,6 +59,7 @@ namespace DDnsSharp.Core
                     try
                     {
                         domainID = await GetDomainID(um.DomainName);
+                        um.DomainID = domainID;
                     }
                     catch (APIException apiex)
                     {
@@ -75,6 +79,7 @@ namespace DDnsSharp.Core
                     try
                     {
                         recordID = await GetRecordID(domainID, um);
+                        um.RecordID = recordID;
                     }
                     catch (APIException apiex)
                     {
@@ -94,7 +99,10 @@ namespace DDnsSharp.Core
                     if (updateResult.Status.Code != 1)
                         um.LastUpdateIP = updateResult.Status.Message;
                     else
-                        um.LastUpdateIP = updateResult.Info.Value;
+                    {
+                        currentIP = updateResult.Info.Value;
+                        um.LastUpdateIP = currentIP;
+                    }
                 }
                 catch (APIException apiex)
                 {
